@@ -27,6 +27,7 @@ a:hover {
 }
 
 body {
+  @apply bg-gradient-to-bl from-blue-400  to-blue-800;
   margin: 0;
   display: flex;
   place-items: center;
