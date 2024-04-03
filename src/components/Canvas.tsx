@@ -23,22 +23,22 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     // only runs once on mount
     p5.setup = () => {
         p5.createCanvas(WIDTH, HEIGHT, p5.WEBGL);
-        p5.background(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
+        // p5.background(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
     };
 
     // loops continuously
     p5.draw = () => {
-        //p5.background(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
+        p5.background(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
         p5.noStroke();
 
         // panning
         p5.translate(center.x, center.y);
 
         // mouse cursor
-        // p5.fill(0, 0, 0);
-        // const mouseXOffset = p5.mouseX - WIDTH / 2 - center.x;
-        // const mouseYOffset = p5.mouseY - HEIGHT / 2 - center.y;
-        // p5.circle(mouseXOffset, mouseYOffset, 10);
+        p5.fill(0, 0, 0);
+        const mouseXOffset = p5.mouseX - WIDTH / 2 - center.x;
+        const mouseYOffset = p5.mouseY - HEIGHT / 2 - center.y;
+        p5.circle(mouseXOffset, mouseYOffset, 10);
 
         // draw elements in sorted order
         p5.fill(0, 51, 160); // the color of the element
@@ -53,14 +53,14 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
     p5.mouseDragged = () => {
         // case: Tool = "Pan"
-        // center.x += p5.mouseX - p5.pmouseX; // dX
-        // center.y += p5.mouseY - p5.pmouseY; // dY
+        center.x += p5.mouseX - p5.pmouseX; // dX
+        center.y += p5.mouseY - p5.pmouseY; // dY
 
         // case: Tool = "Brush"
-        p5.fill(0, 0, 0);
-        const mouseXOffset = p5.mouseX - WIDTH / 2 - center.x;
-        const mouseYOffset = p5.mouseY - HEIGHT / 2 - center.y;
-        p5.circle(mouseXOffset, mouseYOffset, 10);
+        // p5.fill(0, 0, 0);
+        // const mouseXOffset = p5.mouseX - WIDTH / 2 - center.x;
+        // const mouseYOffset = p5.mouseY - HEIGHT / 2 - center.y;
+        // p5.circle(mouseXOffset, mouseYOffset, 10);
     };
 
     p5.updateWithProps = (props) => {
