@@ -29,7 +29,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     p5.setup = () => {
         p5.createCanvas(WIDTH, HEIGHT, p5.WEBGL);
         p5.background(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
-        p5.frameRate(60);
+        p5.frameRate(120);
         isP5Init = true;
     };
 
@@ -45,14 +45,10 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
         p5.noStroke();
 
         // draw elements in sorted order
-        p5.fill(0, 51, 160); // the color of the element
-        p5.circle(0, 0, 100); // the position and size of the element
 
-        p5.fill(0, 51, 0);
-        p5.circle(-150, -150, 100);
-
-        p5.fill(255, 0, 0);
-        p5.circle(150, 150, 100);
+        // circle for testing panning
+        p5.fill(0, 51, 160);
+        p5.circle(0, 0, 100);
     };
 
     p5.mouseDragged = () => {
@@ -127,7 +123,7 @@ function Canvas() {
     const handleMouseMove = () => {
         if (isMouseDown) {
             setIsMouseMove(!isMouseMove);
-        }
+        } 
     };
  
     return ( 
