@@ -8,7 +8,8 @@ const createUserInfo = async () => {
         username text,
         PRIMARY KEY(userID)
     );`
-    client.execute(query);
+    await client.execute(query);
+    console.log("created user table");
 }
 
 export default createUserInfo;

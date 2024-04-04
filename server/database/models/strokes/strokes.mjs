@@ -1,27 +1,29 @@
 import { client } from "../../connection.mjs"
 import constants from "../../constants.mjs";
 
-const createCoordinateType = () => {
+const createCoordinateType = async () => {
     const query = `CREATE TYPE IF NOT EXISTS ${constants.KEYSPACE}.Coordinate(
         x int,
         y int
     );`
-    client.execute(query);
+    await client.execute(query);
+    console.log("created coordinate type");
 }
 
 const createStrokes = async () => {
-    createCoordinateType();
+    await createCoordinateType();
 
     const query = `CREATE TABLE IF NOT EXISTS ${constants.KEYSPACE}.Strokes (
         strokeID int, 
         userID int, 
         username text, 
         coordinates list<frozen <Coordinate>>, 
-        color tuple<tinyint, tinyint, tinyint>, 
+        color tuple<smallint, smallint, smallint>, 
         weight smallint, 
         time timestamp, 
         PRIMARY KEY(strokeID));`
-    client.execute(query);
+    await client.execute(query);
+    console.log("create stroke table");
 }
 
 export default createStrokes;
