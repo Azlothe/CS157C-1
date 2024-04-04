@@ -17,7 +17,7 @@ app.listen(ENV.PORT, () => {
 // temporarily use for example data if needed for other parts of app while database is in progress
 app.get('/api/emp', async (req, res) => {
     try {
-        const query = 'SELECT * FROM emp';
+        const query = 'SELECT * FROM emp.emp';
         const result = await client.execute(query);
         res.json(result.rows);
     } catch (error) {

@@ -1,7 +1,8 @@
 import { client } from "../../connection.mjs"
+import constants from "../../constants.mjs";
 
 const createCoordinateType = () => {
-    const query = `CREATE TYPE IF NOT EXISTS Coordinate(
+    const query = `CREATE TYPE IF NOT EXISTS ${constants.KEYSPACE}.Coordinate(
         x int,
         y int
     );`
@@ -11,7 +12,7 @@ const createCoordinateType = () => {
 const createStrokes = async () => {
     createCoordinateType();
 
-    const query = `CREATE TABLE IF NOT EXISTS Strokes (
+    const query = `CREATE TABLE IF NOT EXISTS ${constants.KEYSPACE}.Strokes (
         strokeID int, 
         userID int, 
         username text, 
