@@ -74,12 +74,32 @@ const EraserIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
 );
 
+const ColorPickerIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        width={32}
+        height={32}
+        color={"#FF0000"}
+        {...props}
+    >
+        <circle
+            cx="12"
+            cy="12"
+            r="10"
+            fill="currentColor"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+        />
+    </svg>
+);
+
 interface Props {
     updateTool: (s: string) => void;
 }
 
 function VerticalToolbar({ updateTool }: Props) {
-
     const handleClick = (s: string) => {
         updateTool(s);
     };
@@ -140,8 +160,22 @@ function VerticalToolbar({ updateTool }: Props) {
             >
                 <EraserIcon />
             </IconButton>
+            <IconButton
+                aria-label="color picker"
+                onClick={() => handleClick("Color Picker")}
+                sx={{
+                    backgroundColor: "white",
+                    border: "2px solid rgba(0, 0, 0, 0.2)",
+                    "&:hover": {
+                        backgroundColor: "#c0c0c0",
+                    },
+                    marginBottom: "4px",
+                }}
+            >
+                <ColorPickerIcon />
+            </IconButton>
         </Toolbar>
     );
-};
+}
 
 export default VerticalToolbar;
