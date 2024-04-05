@@ -87,7 +87,7 @@ function VerticalToolbar({ updateTool }: Props) {
     return (
         <Toolbar
             sx={{
-                backgroundColor: "#FFB81A",
+                backgroundColor: "rgba(255, 184, 26, 0)",
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
@@ -103,6 +103,7 @@ function VerticalToolbar({ updateTool }: Props) {
                 onClick={() => handleClick("Pan")}
                 sx={{
                     backgroundColor: "white",
+                    border: "2px solid rgba(0, 0, 0, 0.2)",
                     "&:hover": {
                         backgroundColor: "#c0c0c0",
                     },
@@ -116,6 +117,7 @@ function VerticalToolbar({ updateTool }: Props) {
                 onClick={() => handleClick("Brush")}
                 sx={{
                     backgroundColor: "white",
+                    border: "2px solid rgba(0, 0, 0, 0.2)",
                     "&:hover": {
                         backgroundColor: "#c0c0c0",
                     },
@@ -129,6 +131,7 @@ function VerticalToolbar({ updateTool }: Props) {
                 onClick={() => handleClick("Eraser")}
                 sx={{
                     backgroundColor: "white",
+                    border: "2px solid rgba(0, 0, 0, 0.2)",
                     "&:hover": {
                         backgroundColor: "#c0c0c0",
                     },
