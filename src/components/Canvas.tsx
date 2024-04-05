@@ -88,7 +88,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
         const newY = center.y === 0 ? 0 : -center.y;
         
         if (tool === "Pan" && props.isMouseMove) {
-            console.log("update center state"); 
+            console.log("update center to {" + newX + ", " + newY + "}"); 
             if (newX !== props.pcenter.x && newY !== props.pcenter.y) {
                 props.updateCenter({ x: newX, y: newY });
             }
