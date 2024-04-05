@@ -5,8 +5,8 @@ import {
     SketchProps,
 } from "@p5-wrapper/react";
 
-const WIDTH = 800;
-const HEIGHT = 450;
+const WIDTH = window.innerWidth;
+const HEIGHT = window.innerHeight;
 const BG_COLOR = {
     r: 255,
     g: 255,
@@ -17,13 +17,13 @@ interface CustomSketchProps extends SketchProps {
     pcenter: { x: number; y: number };
     updateCenter: (newCenter: { x: number; y: number }) => void;
     isMouseMove: boolean;
+    tool: string;
 }
 
 function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     const center = { x: 0, y: 0 };
     let isP5Init = false;
-    let isPan = false;
-    let isDraw = true;
+    let tool = "";
 
     // only runs once on mount
     p5.setup = () => {
@@ -35,7 +35,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
     // loops continuously
     p5.draw = () => {
-        if (isPan) {
+        if (tool === "Pan") {
             p5.background(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
         }
 
@@ -53,13 +53,13 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
     p5.mouseDragged = () => {
         // Tool = "Pan"
-        if (isP5Init && isPan) {
+        if (isP5Init && tool === "Pan") {
             center.x += p5.mouseX - p5.pmouseX; // dX
             center.y += p5.mouseY - p5.pmouseY; // dY
         }
 
         // Tool = "Brush"
-        if (isP5Init && isDraw) {
+        if (isP5Init && tool === "Brush") {
             p5.stroke(0, 0, 0);
             p5.strokeWeight(10);
             const pmouseXOffset = p5.pmouseX - WIDTH / 2 - center.x;
@@ -70,43 +70,47 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
         }
     };
 
-    p5.keyPressed = () => {
-        if (p5.key == " ") {
-            isPan = true;
-            isDraw = false;
-        }
-    };
-
-    p5.keyReleased = () => {
-        if (p5.key == " ") {
-            isPan = false;
-            isDraw = true;
-        }
-    };
+    // p5.keyPressed = () => {
+    //     if (p5.key == " ") {
+    //         isPan = true;
+    //     }
+    // };
+ 
+    // p5.keyReleased = () => {
+    //     if (p5.key == " ") {
+    //         isPan = false;
+    //     } 
+    // };
 
     p5.updateWithProps = (props) => {
         // to fix negative zeros 
         const newX = center.x === 0 ? 0 : -center.x;
         const newY = center.y === 0 ? 0 : -center.y;
         
-        if (isPan && props.isMouseMove) {
+        if (tool === "Pan" && props.isMouseMove) {
             console.log("update center state"); 
             if (newX !== props.pcenter.x && newY !== props.pcenter.y) {
                 props.updateCenter({ x: newX, y: newY });
             }
         }
+
+        tool = props.tool;
     };
 }
 
-function Canvas() {
+interface Props {
+    tool: string;
+}
+
+function Canvas({ tool }: Props) {
     const [center, setCenter] = useState({ x: 0, y: 0 });
     const [isMouseDown, setIsMouseDown] = useState(false);
     const [isMouseMove, setIsMouseMove] = useState(false);
 
-    const bottomRight = {
-        x: center.x + Math.ceil(WIDTH / 2),
-        y: center.y + Math.ceil(HEIGHT / 2),
-    };
+    // const bottomRight = {
+    //     x: center.x + Math.ceil(WIDTH / 2),
+    //     y: center.y + Math.ceil(HEIGHT / 2),
+    // };
 
     const updateCenter = (newCenter: { x: number; y: number }) => {
         setCenter(newCenter);
@@ -129,17 +133,18 @@ function Canvas() {
     return ( 
         <>
             <div onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove}> 
-                <p>
+                {/* <p>
                     Center: ({center.x}, {center.y}) 
                 </p>
                 <p>
                     Bottom Right: ({bottomRight.x}, {bottomRight.y})
-                </p>
+                </p> */}
                 <ReactP5Wrapper
                     sketch={sketch}
                     pcenter={center}
                     updateCenter={updateCenter}
                     isMouseMove={isMouseMove}
+                    tool={tool}
                 />
             </div>
         </>
