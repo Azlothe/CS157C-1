@@ -1,5 +1,6 @@
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
+import { RgbColorPicker } from "react-colorful";
 
 const PanIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
@@ -74,13 +75,16 @@ const EraserIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
 );
 
-const ColorPickerIcon = (props: React.SVGProps<SVGSVGElement>) => (
+const ColorPickerIcon = ({
+    color,
+    ...props
+}: { color: string } & React.SVGProps<SVGSVGElement>) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         width={32}
         height={32}
-        color={"#FF0000"}
+        color={color}
         {...props}
     >
         <circle
@@ -95,86 +99,133 @@ const ColorPickerIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
 );
 
-interface Props {
-    updateTool: (s: string) => void;
+function rgbToHex({ r, g, b }: { r: number; g: number; b: number }): string {
+    const toHex = (c: number): string => {
+        const hex = c.toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+    };
+
+    return "#" + toHex(r) + toHex(g) + toHex(b);
 }
 
-function VerticalToolbar({ updateTool }: Props) {
-    const handleClick = (s: string) => {
+type Tool = "Pan" | "Brush" | "Eraser";
+
+interface Props {
+    updateTool: (s: Tool) => void;
+    updateColor: (color: { r: number; g: number; b: number }) => void;
+    color: { r: number; g: number; b: number };
+}
+
+function VerticalToolbar({ updateTool, updateColor, color }: Props) {
+    const hexColor = rgbToHex(color);
+
+    const handleClick = (s: Tool) => {
         updateTool(s);
     };
 
+    const handleColor = (color: { r: number; g: number; b: number }) => {
+        updateColor(color);
+    };
+
     return (
-        <Toolbar
-            sx={{
-                backgroundColor: "rgba(255, 184, 26, 0)",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "64px",
-                height: "100vh",
-                position: "fixed",
-                top: 0,
-                left: 0,
-            }}
-        >
-            <IconButton
-                aria-label="pan"
-                onClick={() => handleClick("Pan")}
+        <>
+            <Toolbar
                 sx={{
-                    backgroundColor: "white",
-                    border: "2px solid rgba(0, 0, 0, 0.2)",
-                    "&:hover": {
-                        backgroundColor: "#c0c0c0",
-                    },
-                    marginBottom: "4px",
+                    backgroundColor: "rgba(255, 184, 26, 0)",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "64px",
+                    height: "100vh",
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
                 }}
             >
-                <PanIcon />
-            </IconButton>
-            <IconButton
-                aria-label="brush"
-                onClick={() => handleClick("Brush")}
-                sx={{
-                    backgroundColor: "white",
-                    border: "2px solid rgba(0, 0, 0, 0.2)",
-                    "&:hover": {
-                        backgroundColor: "#c0c0c0",
-                    },
-                    marginBottom: "4px",
-                }}
-            >
-                <BrushIcon />
-            </IconButton>
-            <IconButton
-                aria-label="eraser"
-                onClick={() => handleClick("Eraser")}
-                sx={{
-                    backgroundColor: "white",
-                    border: "2px solid rgba(0, 0, 0, 0.2)",
-                    "&:hover": {
-                        backgroundColor: "#c0c0c0",
-                    },
-                    marginBottom: "4px",
-                }}
-            >
-                <EraserIcon />
-            </IconButton>
-            <IconButton
-                aria-label="color picker"
-                onClick={() => handleClick("Color Picker")}
-                sx={{
-                    backgroundColor: "white",
-                    border: "2px solid rgba(0, 0, 0, 0.2)",
-                    "&:hover": {
-                        backgroundColor: "#c0c0c0",
-                    },
-                    marginBottom: "4px",
-                }}
-            >
-                <ColorPickerIcon />
-            </IconButton>
-        </Toolbar>
+                <IconButton
+                    aria-label="pan"
+                    onClick={() => handleClick("Pan")}
+                    sx={{
+                        backgroundColor: "white",
+                        border: "2px solid rgba(0, 0, 0, 0.2)",
+                        "&:hover": {
+                            backgroundColor: "#c0c0c0",
+                            transform: "scale(1.15)",
+                            transition: "transform 0.3s ease",
+                        },
+                        marginBottom: "4px",
+                    }}
+                >
+                    <PanIcon />
+                </IconButton>
+                <IconButton
+                    aria-label="brush"
+                    onClick={() => handleClick("Brush")}
+                    sx={{
+                        backgroundColor: "white",
+                        border: "2px solid rgba(0, 0, 0, 0.2)",
+                        "&:hover": {
+                            backgroundColor: "#c0c0c0",
+                            transform: "scale(1.15)",
+                            transition: "transform 0.3s ease",
+                        },
+                        marginBottom: "4px",
+                    }}
+                >
+                    <BrushIcon />
+                </IconButton>
+                <IconButton
+                    aria-label="eraser"
+                    onClick={() => handleClick("Eraser")}
+                    sx={{
+                        backgroundColor: "white",
+                        border: "2px solid rgba(0, 0, 0, 0.2)",
+                        "&:hover": {
+                            backgroundColor: "#c0c0c0",
+                            transform: "scale(1.15)",
+                            transition: "transform 0.3s ease",
+                        },
+                        marginBottom: "4px",
+                    }}
+                >
+                    <EraserIcon />
+                </IconButton>
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        marginLeft: "128px",
+                    }}
+                >
+                    <IconButton
+                        aria-label="color-picker"
+                        // onClick={() => handleClick("Color Picker")}
+                        sx={{
+                            backgroundColor: "white",
+                            border: "2px solid rgba(0, 0, 0, 0.2)",
+                            "&:hover": {
+                                backgroundColor: "#c0c0c0",
+                                transform: "scale(1.15)",
+                                transition: "transform 0.3s ease",
+                            },
+                            marginBottom: "4px",
+                        }}
+                    >
+                        <ColorPickerIcon color={hexColor} />
+                    </IconButton>
+                    <RgbColorPicker
+                        className="color-picker"
+                        color={color}
+                        onChange={handleColor}
+                        style={{
+                            width: "128px",
+                            height: "128px",
+                            paddingLeft: "6px",
+                        }}
+                    />
+                </div>
+            </Toolbar>
+        </>
     );
 }
 

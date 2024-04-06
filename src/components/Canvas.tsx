@@ -18,12 +18,14 @@ interface CustomSketchProps extends SketchProps {
     updateCenter: (newCenter: { x: number; y: number }) => void;
     isMouseMove: boolean;
     tool: string;
+    color: { r: number; g: number; b: number };
 }
 
 function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     const center = { x: 0, y: 0 };
     let isP5Init = false;
     let tool = "";
+    let color = {r: 0, g: 0, b: 0};
 
     // only runs once on mount
     p5.setup = () => {
@@ -60,7 +62,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
         // Tool = "Brush"
         if (isP5Init && tool === "Brush") {
-            p5.stroke(0, 0, 0);
+            p5.stroke(color.r, color.g, color.b);
             p5.strokeWeight(10);
             const pmouseXOffset = p5.pmouseX - WIDTH / 2 - center.x;
             const pmouseYOffset = p5.pmouseY - HEIGHT / 2 - center.y;
@@ -75,34 +77,36 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     //         isPan = true;
     //     }
     // };
- 
+
     // p5.keyReleased = () => {
     //     if (p5.key == " ") {
     //         isPan = false;
-    //     } 
+    //     }
     // };
 
     p5.updateWithProps = (props) => {
-        // to fix negative zeros 
+        // to fix negative zeros
         const newX = center.x === 0 ? 0 : -center.x;
         const newY = center.y === 0 ? 0 : -center.y;
-        
+
         if (tool === "Pan" && props.isMouseMove) {
-            console.log("update center to {" + newX + ", " + newY + "}"); 
+            console.log("update center to {" + newX + ", " + newY + "}");
             if (newX !== props.pcenter.x && newY !== props.pcenter.y) {
                 props.updateCenter({ x: newX, y: newY });
             }
         }
 
         tool = props.tool;
+        color = props.color;
     };
 }
 
 interface Props {
     tool: string;
+    color: { r: number; g: number; b: number };
 }
 
-function Canvas({ tool }: Props) {
+function Canvas({ tool, color }: Props) {
     const [center, setCenter] = useState({ x: 0, y: 0 });
     const [isMouseDown, setIsMouseDown] = useState(false);
     const [isMouseMove, setIsMouseMove] = useState(false);
@@ -122,17 +126,21 @@ function Canvas({ tool }: Props) {
 
     const handleMouseUp = () => {
         setIsMouseDown(false);
-    }; 
+    };
 
     const handleMouseMove = () => {
         if (isMouseDown) {
             setIsMouseMove(!isMouseMove);
-        } 
+        }
     };
- 
-    return ( 
+
+    return (
         <>
-            <div onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove}> 
+            <div
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
+                onMouseMove={handleMouseMove}
+            >
                 {/* <p>
                     Center: ({center.x}, {center.y}) 
                 </p>
@@ -145,6 +153,7 @@ function Canvas({ tool }: Props) {
                     updateCenter={updateCenter}
                     isMouseMove={isMouseMove}
                     tool={tool}
+                    color={color}
                 />
             </div>
         </>

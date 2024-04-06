@@ -2,13 +2,19 @@ import { useEffect, useState } from "react";
 import Canvas from "../components/Canvas.tsx";
 import VerticalToolbar from "../components/VerticalToolbar.tsx";
 
+type Tool = "Pan" | "Brush" | "Eraser";
+
 function CanvasPage() {
     const [tool, setTool] = useState("Brush");
-    // const [brushSize, setBrushSize] = useState(0);
-    // const [brushColor, setBrushColor] = useState({r: 0, g: 0, b: 0});
+    const [size, setSize] = useState(0);
+    const [color, setColor] = useState({ r: 0, g: 0, b: 0 });
 
-    const updateTool = (s: string) => {
+    const updateTool = (s: Tool) => {
         setTool(s);
+    };
+
+    const updateColor = (color: { r: number; g: number; b: number }) => {
+        setColor(color);
     };
 
     useEffect(() => {
@@ -18,8 +24,12 @@ function CanvasPage() {
     return (
         <>
             <div className="bg-gray-500 flex justify-center items-center w-screen h-screen">
-                <VerticalToolbar updateTool={updateTool}/>
-                <Canvas tool={tool}/>
+                <VerticalToolbar
+                    updateTool={updateTool}
+                    updateColor={updateColor}
+                    color={color}
+                />
+                <Canvas tool={tool} color={color} />
             </div>
         </>
     );
