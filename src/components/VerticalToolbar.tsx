@@ -1,6 +1,7 @@
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import { RgbColorPicker } from "react-colorful";
+import {Tool, RGB} from "../types/shared.tsx";
 
 const PanIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
@@ -76,15 +77,15 @@ const EraserIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 const ColorPickerIcon = ({
-    color,
+    hexColor,
     ...props
-}: { color: string } & React.SVGProps<SVGSVGElement>) => (
+}: { hexColor: string } & React.SVGProps<SVGSVGElement>) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         width={32}
         height={32}
-        color={color}
+        color={hexColor}
         {...props}
     >
         <circle
@@ -99,7 +100,7 @@ const ColorPickerIcon = ({
     </svg>
 );
 
-function rgbToHex({ r, g, b }: { r: number; g: number; b: number }): string {
+function rgbToHex({ r, g, b }: RGB): string {
     const toHex = (c: number): string => {
         const hex = c.toString(16);
         return hex.length === 1 ? "0" + hex : hex;
@@ -108,12 +109,10 @@ function rgbToHex({ r, g, b }: { r: number; g: number; b: number }): string {
     return "#" + toHex(r) + toHex(g) + toHex(b);
 }
 
-type Tool = "Pan" | "Brush" | "Eraser";
-
 interface Props {
     updateTool: (s: Tool) => void;
-    updateColor: (color: { r: number; g: number; b: number }) => void;
-    color: { r: number; g: number; b: number };
+    updateColor: (color: RGB) => void;
+    color: RGB;
 }
 
 function VerticalToolbar({ updateTool, updateColor, color }: Props) {
@@ -123,7 +122,7 @@ function VerticalToolbar({ updateTool, updateColor, color }: Props) {
         updateTool(s);
     };
 
-    const handleColor = (color: { r: number; g: number; b: number }) => {
+    const handleColor = (color: RGB) => {
         updateColor(color);
     };
 
@@ -211,7 +210,7 @@ function VerticalToolbar({ updateTool, updateColor, color }: Props) {
                             marginBottom: "4px",
                         }}
                     >
-                        <ColorPickerIcon color={hexColor} />
+                        <ColorPickerIcon hexColor={hexColor} />
                     </IconButton>
                     <RgbColorPicker
                         className="color-picker"

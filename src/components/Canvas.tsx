@@ -4,6 +4,7 @@ import {
     ReactP5Wrapper,
     SketchProps,
 } from "@p5-wrapper/react";
+import {Tool, RGB} from "../types/shared.tsx";
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
@@ -17,8 +18,8 @@ interface CustomSketchProps extends SketchProps {
     pcenter: { x: number; y: number };
     updateCenter: (newCenter: { x: number; y: number }) => void;
     isMouseMove: boolean;
-    tool: string;
-    color: { r: number; g: number; b: number };
+    tool: Tool;
+    color: RGB;
 }
 
 function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
@@ -102,8 +103,8 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 }
 
 interface Props {
-    tool: string;
-    color: { r: number; g: number; b: number };
+    tool: Tool;
+    color: RGB;
 }
 
 function Canvas({ tool, color }: Props) {
