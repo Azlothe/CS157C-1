@@ -147,7 +147,7 @@ function VerticalToolbar({ updateTool, updateColor, color }: Props) {
                     onClick={() => handleClick("Pan")}
                     sx={{
                         backgroundColor: "white",
-                        border: "2px solid rgba(0, 0, 0, 0.2)",
+                        border: "1px solid rgba(0, 0, 0, 0.2)",
                         "&:hover": {
                             backgroundColor: "#c0c0c0",
                             transform: "scale(1.15)",
@@ -163,7 +163,7 @@ function VerticalToolbar({ updateTool, updateColor, color }: Props) {
                     onClick={() => handleClick("Brush")}
                     sx={{
                         backgroundColor: "white",
-                        border: "2px solid rgba(0, 0, 0, 0.2)",
+                        border: "1px solid rgba(0, 0, 0, 0.2)",
                         "&:hover": {
                             backgroundColor: "#c0c0c0",
                             transform: "scale(1.15)",
@@ -179,7 +179,7 @@ function VerticalToolbar({ updateTool, updateColor, color }: Props) {
                     onClick={() => handleClick("Eraser")}
                     sx={{
                         backgroundColor: "white",
-                        border: "2px solid rgba(0, 0, 0, 0.2)",
+                        border: "1px solid rgba(0, 0, 0, 0.2)",
                         "&:hover": {
                             backgroundColor: "#c0c0c0",
                             transform: "scale(1.15)",
@@ -202,7 +202,7 @@ function VerticalToolbar({ updateTool, updateColor, color }: Props) {
                         // onClick={() => handleClick("Color Picker")}
                         sx={{
                             backgroundColor: "white",
-                            border: "2px solid rgba(0, 0, 0, 0.2)",
+                            border: "1px solid rgba(0, 0, 0, 0.2)",
                             "&:hover": {
                                 backgroundColor: "#c0c0c0",
                                 transform: "scale(1.15)",
