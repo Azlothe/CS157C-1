@@ -3,10 +3,14 @@ import Canvas from "../components/Canvas.tsx";
 import VerticalToolbar from "../components/VerticalToolbar.tsx";
 import { Tool, RGB } from "../types/shared.tsx";
 
+const DEFAULT_TOOL: Tool = "Brush";
+const DEFAULT_COLOR: RGB = { r: 0, g: 0, b: 0 };
+const DEFAULT_SIZE = 1;
+
 function CanvasPage() {
-    const [tool, setTool] = useState<Tool>("Brush");
-    const [color, setColor] = useState<RGB>({ r: 0, g: 0, b: 0 });
-    const [size, setSize] = useState(0);
+    const [tool, setTool] = useState<Tool>(DEFAULT_TOOL);
+    const [color, setColor] = useState<RGB>(DEFAULT_COLOR);
+    const [size, setSize] = useState(DEFAULT_SIZE);
 
     const updateTool = (tool: Tool) => {
         setTool(tool);
