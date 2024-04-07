@@ -14,6 +14,65 @@ const BG_COLOR = {
     b: 255,
 };
 
+interface Props {
+    tool: Tool;
+    color: RGB;
+}
+
+function Canvas({ tool, color }: Props) {
+    const [center, setCenter] = useState({ x: 0, y: 0 });
+    const [isMouseDown, setIsMouseDown] = useState(false);
+    const [isMouseMove, setIsMouseMove] = useState(false);
+
+    // const bottomRight = {
+    //     x: center.x + Math.ceil(WIDTH / 2),
+    //     y: center.y + Math.ceil(HEIGHT / 2),
+    // };
+
+    const updateCenter = (newCenter: { x: number; y: number }) => {
+        setCenter(newCenter);
+    };
+
+    const handleMouseDown = () => {
+        setIsMouseDown(true);
+    };
+
+    const handleMouseUp = () => {
+        setIsMouseDown(false);
+    };
+
+    const handleMouseMove = () => {
+        if (isMouseDown) {
+            setIsMouseMove(!isMouseMove);
+        }
+    };
+
+    return (
+        <>
+            <div
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
+                onMouseMove={handleMouseMove}
+            >
+                {/* <p>
+                    Center: ({center.x}, {center.y}) 
+                </p>
+                <p>
+                    Bottom Right: ({bottomRight.x}, {bottomRight.y})
+                </p> */}
+                <ReactP5Wrapper
+                    sketch={sketch}
+                    pcenter={center}
+                    updateCenter={updateCenter}
+                    isMouseMove={isMouseMove}
+                    tool={tool}
+                    color={color}
+                />
+            </div>
+        </>
+    );
+}
+
 interface CustomSketchProps extends SketchProps {
     pcenter: { x: number; y: number };
     updateCenter: (newCenter: { x: number; y: number }) => void;
@@ -100,65 +159,6 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
         tool = props.tool;
         color = props.color;
     };
-}
-
-interface Props {
-    tool: Tool;
-    color: RGB;
-}
-
-function Canvas({ tool, color }: Props) {
-    const [center, setCenter] = useState({ x: 0, y: 0 });
-    const [isMouseDown, setIsMouseDown] = useState(false);
-    const [isMouseMove, setIsMouseMove] = useState(false);
-
-    // const bottomRight = {
-    //     x: center.x + Math.ceil(WIDTH / 2),
-    //     y: center.y + Math.ceil(HEIGHT / 2),
-    // };
-
-    const updateCenter = (newCenter: { x: number; y: number }) => {
-        setCenter(newCenter);
-    };
-
-    const handleMouseDown = () => {
-        setIsMouseDown(true);
-    };
-
-    const handleMouseUp = () => {
-        setIsMouseDown(false);
-    };
-
-    const handleMouseMove = () => {
-        if (isMouseDown) {
-            setIsMouseMove(!isMouseMove);
-        }
-    };
-
-    return (
-        <>
-            <div
-                onMouseDown={handleMouseDown}
-                onMouseUp={handleMouseUp}
-                onMouseMove={handleMouseMove}
-            >
-                {/* <p>
-                    Center: ({center.x}, {center.y}) 
-                </p>
-                <p>
-                    Bottom Right: ({bottomRight.x}, {bottomRight.y})
-                </p> */}
-                <ReactP5Wrapper
-                    sketch={sketch}
-                    pcenter={center}
-                    updateCenter={updateCenter}
-                    isMouseMove={isMouseMove}
-                    tool={tool}
-                    color={color}
-                />
-            </div>
-        </>
-    );
 }
 
 export default Canvas;
