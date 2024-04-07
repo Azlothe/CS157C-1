@@ -89,7 +89,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     let isP5Init = false;
     let tool = "";
     let color = { r: 0, g: 0, b: 0 };
-    let size = 0;
+    let size = 1;
 
     // only runs once on mount
     p5.setup = () => {
