@@ -13,6 +13,10 @@ const BG_COLOR: RGB = {
     g: 255,
     b: 255,
 };
+const DEFAULT_CENTER = { x: 0, y: 0 };
+const DEFAULT_TOOL = "Brush";
+const DEFAULT_COLOR = { r: 0, g: 0, b: 0 };
+const DEFAULT_SIZE = 1;
 
 interface Props {
     tool: Tool;
@@ -85,11 +89,11 @@ interface CustomSketchProps extends SketchProps {
 }
 
 function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
-    const center = { x: 0, y: 0 };
     let isP5Init = false;
-    let tool = "";
-    let color = { r: 0, g: 0, b: 0 };
-    let size = 1;
+    const center = DEFAULT_CENTER;
+    let tool = DEFAULT_TOOL;
+    let color = DEFAULT_COLOR;
+    let size = DEFAULT_SIZE;
 
     // only runs once on mount
     p5.setup = () => {
