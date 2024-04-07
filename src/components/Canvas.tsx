@@ -22,10 +22,11 @@ interface Props {
     tool: Tool;
     color: RGB;
     size: number;
+    center: {x: number, y: number};
+    updateCenter: (center: {x: number, y: number}) => void;
 }
 
-function Canvas({ tool, color, size }: Props) {
-    const [center, setCenter] = useState({ x: 0, y: 0 });
+function Canvas({ tool, color, size, center, updateCenter }: Props) {
     const [isMouseDown, setIsMouseDown] = useState(false);
     const [isMouseMove, setIsMouseMove] = useState(false);
 
@@ -33,10 +34,6 @@ function Canvas({ tool, color, size }: Props) {
     //     x: center.x + Math.ceil(WIDTH / 2),
     //     y: center.y + Math.ceil(HEIGHT / 2),
     // };
-
-    const updateCenter = (newCenter: { x: number; y: number }) => {
-        setCenter(newCenter);
-    };
 
     const handleMouseDown = () => {
         setIsMouseDown(true);
