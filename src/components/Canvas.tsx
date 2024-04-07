@@ -4,11 +4,11 @@ import {
     ReactP5Wrapper,
     SketchProps,
 } from "@p5-wrapper/react";
-import {Tool, RGB} from "../types/shared.tsx";
+import { Tool, RGB } from "../types/shared.tsx";
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
-const BG_COLOR = {
+const BG_COLOR: RGB = {
     r: 255,
     g: 255,
     b: 255,
@@ -85,7 +85,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     const center = { x: 0, y: 0 };
     let isP5Init = false;
     let tool = "";
-    let color = {r: 0, g: 0, b: 0};
+    let color = { r: 0, g: 0, b: 0 };
 
     // only runs once on mount
     p5.setup = () => {
@@ -123,6 +123,17 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
         // Tool = "Brush"
         if (isP5Init && tool === "Brush") {
             p5.stroke(color.r, color.g, color.b);
+            p5.strokeWeight(10);
+            const pmouseXOffset = p5.pmouseX - WIDTH / 2 - center.x;
+            const pmouseYOffset = p5.pmouseY - HEIGHT / 2 - center.y;
+            const mouseXOffset = p5.mouseX - WIDTH / 2 - center.x;
+            const mouseYOffset = p5.mouseY - HEIGHT / 2 - center.y;
+            p5.line(pmouseXOffset, pmouseYOffset, mouseXOffset, mouseYOffset);
+        }
+
+        // Tool = "Eraser"
+        if (isP5Init && tool === "Eraser") {
+            p5.stroke(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
             p5.strokeWeight(10);
             const pmouseXOffset = p5.pmouseX - WIDTH / 2 - center.x;
             const pmouseYOffset = p5.pmouseY - HEIGHT / 2 - center.y;

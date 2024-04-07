@@ -8,8 +8,8 @@ function CanvasPage() {
     // const [size, setSize] = useState(0);
     const [color, setColor] = useState<RGB>({ r: 0, g: 0, b: 0 });
 
-    const updateTool = (s: Tool) => {
-        setTool(s);
+    const updateTool = (tool: Tool) => {
+        setTool(tool);
     };
 
     const updateColor = (color: RGB) => {

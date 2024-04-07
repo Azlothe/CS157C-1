@@ -1,24 +1,29 @@
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import { RgbColorPicker } from "react-colorful";
-import {Tool, RGB} from "../types/shared.tsx";
+import { Tool, RGB } from "../types/shared.tsx";
 
 interface Props {
-    updateTool: (s: Tool) => void;
+    updateTool: (tool: Tool) => void;
     updateColor: (color: RGB) => void;
     color: RGB;
 }
 
+let isColorPick = false;
+
 function VerticalToolbar({ updateTool, updateColor, color }: Props) {
     const hexColor = rgbToHex(color);
 
-    let isColorPick = false;
-
-    const handleClick = (s: Tool) => {
-        if (isColorPick === false && s === "Color Picker") {
+    const handleClick = (tool: Tool) => {
+        if (isColorPick === false && tool === "Color Picker") {
             isColorPick = true;
+            console.log(isColorPick);
+        } else if (isColorPick === true && tool !== "Color Picker") {
+            isColorPick = false;
+            console.log(isColorPick);
         }
-        updateTool(s);
+
+        updateTool(tool);
     };
 
     const handleColor = (color: RGB) => {
@@ -30,7 +35,7 @@ function VerticalToolbar({ updateTool, updateColor, color }: Props) {
             const hex = c.toString(16);
             return hex.length === 1 ? "0" + hex : hex;
         };
-    
+
         return "#" + toHex(r) + toHex(g) + toHex(b);
     }
 
@@ -42,11 +47,11 @@ function VerticalToolbar({ updateTool, updateColor, color }: Props) {
                     flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
-                    width: "64px",
+                    width: "72px",
                     height: "100vh",
                     position: "fixed",
-                    top: 0,
-                    left: 0,
+                    top: "0px",
+                    left: "0px",
                 }}
             >
                 <IconButton
@@ -60,7 +65,7 @@ function VerticalToolbar({ updateTool, updateColor, color }: Props) {
                             transform: "scale(1.15)",
                             transition: "transform 0.3s ease",
                         },
-                        marginBottom: "4px",
+                        margin: "2px",
                     }}
                 >
                     <PanIcon />
@@ -76,7 +81,7 @@ function VerticalToolbar({ updateTool, updateColor, color }: Props) {
                             transform: "scale(1.15)",
                             transition: "transform 0.3s ease",
                         },
-                        marginBottom: "4px",
+                        margin: "2px",
                     }}
                 >
                     <BrushIcon />
@@ -92,7 +97,7 @@ function VerticalToolbar({ updateTool, updateColor, color }: Props) {
                             transform: "scale(1.15)",
                             transition: "transform 0.3s ease",
                         },
-                        marginBottom: "4px",
+                        margin: "2px",
                     }}
                 >
                     <EraserIcon />
@@ -101,7 +106,6 @@ function VerticalToolbar({ updateTool, updateColor, color }: Props) {
                     style={{
                         display: "flex",
                         alignItems: "flex-start",
-                        marginLeft: "128px",
                     }}
                 >
                     <IconButton
@@ -115,21 +119,31 @@ function VerticalToolbar({ updateTool, updateColor, color }: Props) {
                                 transform: "scale(1.15)",
                                 transition: "transform 0.3s ease",
                             },
-                            marginBottom: "4px",
+                            margin: "2px",
                         }}
                     >
                         <ColorPickerIcon hexColor={hexColor} />
                     </IconButton>
-                    <RgbColorPicker
-                        className="color-picker"
-                        color={color}
-                        onChange={handleColor}
-                        style={{
-                            width: "128px",
-                            height: "128px",
-                            paddingLeft: "6px",
-                        }}
-                    />
+                    {isColorPick ? (
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "flex-start",
+                                position: "absolute",
+                                left: "72px",
+                            }}
+                        >
+                            <RgbColorPicker
+                                className="color-picker"
+                                color={color}
+                                onChange={handleColor}
+                                style={{
+                                    width: "128px",
+                                    height: "128px",
+                                }}
+                            />
+                        </div>
+                    ) : null}
                 </div>
             </Toolbar>
         </>
@@ -142,7 +156,7 @@ const PanIcon = (props: React.SVGProps<SVGSVGElement>) => (
         viewBox="0 0 24 24"
         width={32}
         height={32}
-        color={"#000000"}
+        color={"#121212"}
         fill={"none"}
         {...props}
     >
@@ -168,7 +182,7 @@ const BrushIcon = (props: React.SVGProps<SVGSVGElement>) => (
         viewBox="0 0 24 24"
         width={32}
         height={32}
-        color={"#000000"}
+        color={"#121212"}
         fill={"none"}
         {...props}
     >
@@ -188,7 +202,7 @@ const EraserIcon = (props: React.SVGProps<SVGSVGElement>) => (
         viewBox="0 0 24 24"
         width={32}
         height={32}
-        color={"#000000"}
+        color={"#121212"}
         fill={"none"}
         {...props}
     >
