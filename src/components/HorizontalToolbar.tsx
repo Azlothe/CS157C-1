@@ -21,7 +21,14 @@ function HorizontalToolbar({ center }: Props) {
                     color: "#121212",
                 }}
             >
-                <b style={{ marginLeft: "-12px", fontFamily: "Montserrat, sans-serif" }}>
+                <b
+                    style={{
+                        marginLeft: "-12px",
+                        fontFamily: "Montserrat, sans-serif",
+                        textShadow:
+                            "1px 1px 0 white, -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white",
+                    }}
+                >
                     ({center.x}, {center.y})
                 </b>
             </Toolbar>
