@@ -5,6 +5,7 @@ import {
     SketchProps,
 } from "@p5-wrapper/react";
 import { Tool, RGB } from "../types/shared.tsx";
+import { loadStrokes } from "../services/CanvasService.ts";
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
@@ -92,6 +93,26 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     let color = DEFAULT_COLOR;
     let size = DEFAULT_SIZE;
 
+    const initCoords = async() => {
+        loadStrokes()
+            .then(data => {
+                data.forEach(el => drawCoords(el.coordinates, el.color, el.weight))
+            });
+        }
+        
+        const drawCoords = (coords : { x : number, y : number}[], color : number[], weight : number) => {
+            p5.strokeWeight(weight);
+            p5.stroke(...color);
+            p5.noFill();
+            p5.beginShape();
+            coords.forEach(el => p5.vertex(el.x, el.y))
+            p5.endShape();
+        }
+        
+        p5.preload = () => {
+            initCoords();
+        }
+    
     // only runs once on mount
     p5.setup = () => {
         p5.createCanvas(WIDTH, HEIGHT, p5.WEBGL);
@@ -109,13 +130,14 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
         // panning
         p5.translate(center.x, center.y);
 
-        p5.noStroke();
+        // p5.noStroke();
 
         // draw elements in sorted order
 
         // circle for testing panning
-        p5.fill(0, 51, 160);
-        p5.circle(0, 0, 100);
+        // p5.fill(0, 51, 160);
+        // p5.circle(0, 0, 100);
+
     };
 
     p5.mouseDragged = () => {
