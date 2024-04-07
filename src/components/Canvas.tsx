@@ -17,9 +17,10 @@ const BG_COLOR: RGB = {
 interface Props {
     tool: Tool;
     color: RGB;
+    size: number;
 }
 
-function Canvas({ tool, color }: Props) {
+function Canvas({ tool, color, size }: Props) {
     const [center, setCenter] = useState({ x: 0, y: 0 });
     const [isMouseDown, setIsMouseDown] = useState(false);
     const [isMouseMove, setIsMouseMove] = useState(false);
@@ -67,6 +68,7 @@ function Canvas({ tool, color }: Props) {
                     isMouseMove={isMouseMove}
                     tool={tool}
                     color={color}
+                    size={size}
                 />
             </div>
         </>
@@ -79,6 +81,7 @@ interface CustomSketchProps extends SketchProps {
     isMouseMove: boolean;
     tool: Tool;
     color: RGB;
+    size: number;
 }
 
 function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
@@ -86,6 +89,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     let isP5Init = false;
     let tool = "";
     let color = { r: 0, g: 0, b: 0 };
+    let size = 0;
 
     // only runs once on mount
     p5.setup = () => {
@@ -123,7 +127,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
         // Tool = "Brush"
         if (isP5Init && tool === "Brush") {
             p5.stroke(color.r, color.g, color.b);
-            p5.strokeWeight(10);
+            p5.strokeWeight(size);
             const pmouseXOffset = p5.pmouseX - WIDTH / 2 - center.x;
             const pmouseYOffset = p5.pmouseY - HEIGHT / 2 - center.y;
             const mouseXOffset = p5.mouseX - WIDTH / 2 - center.x;
@@ -134,7 +138,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
         // Tool = "Eraser"
         if (isP5Init && tool === "Eraser") {
             p5.stroke(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
-            p5.strokeWeight(10);
+            p5.strokeWeight(size);
             const pmouseXOffset = p5.pmouseX - WIDTH / 2 - center.x;
             const pmouseYOffset = p5.pmouseY - HEIGHT / 2 - center.y;
             const mouseXOffset = p5.mouseX - WIDTH / 2 - center.x;
@@ -169,6 +173,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
         tool = props.tool;
         color = props.color;
+        size = props.size;
     };
 }
 

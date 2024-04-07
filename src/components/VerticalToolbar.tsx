@@ -1,17 +1,20 @@
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
+import VerticalAccessibleSlider from "./VerticalAccessibleSlider.tsx";
 import { RgbColorPicker } from "react-colorful";
 import { Tool, RGB } from "../types/shared.tsx";
 
 interface Props {
     updateTool: (tool: Tool) => void;
     updateColor: (color: RGB) => void;
+    updateSize: (size: number) => void;
     color: RGB;
+    size: number;
 }
 
 let isColorPick = false;
 
-function VerticalToolbar({ updateTool, updateColor, color }: Props) {
+function VerticalToolbar({ updateTool, updateColor, updateSize, color, size }: Props) {
     const hexColor = rgbToHex(color);
 
     const handleClick = (tool: Tool) => {
@@ -60,8 +63,9 @@ function VerticalToolbar({ updateTool, updateColor, color }: Props) {
                     sx={{
                         backgroundColor: "white",
                         border: "1px solid rgba(0, 0, 0, 0.2)",
+                        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.2)",
                         "&:hover": {
-                            backgroundColor: "#c0c0c0",
+                            backgroundColor: "#f0f0f0",
                             transform: "scale(1.15)",
                             transition: "transform 0.3s ease",
                         },
@@ -76,8 +80,9 @@ function VerticalToolbar({ updateTool, updateColor, color }: Props) {
                     sx={{
                         backgroundColor: "white",
                         border: "1px solid rgba(0, 0, 0, 0.2)",
+                        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.2)",
                         "&:hover": {
-                            backgroundColor: "#c0c0c0",
+                            backgroundColor: "#f0f0f0",
                             transform: "scale(1.15)",
                             transition: "transform 0.3s ease",
                         },
@@ -92,8 +97,9 @@ function VerticalToolbar({ updateTool, updateColor, color }: Props) {
                     sx={{
                         backgroundColor: "white",
                         border: "1px solid rgba(0, 0, 0, 0.2)",
+                        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.2)",
                         "&:hover": {
-                            backgroundColor: "#c0c0c0",
+                            backgroundColor: "#f0f0f0",
                             transform: "scale(1.15)",
                             transition: "transform 0.3s ease",
                         },
@@ -114,8 +120,9 @@ function VerticalToolbar({ updateTool, updateColor, color }: Props) {
                         sx={{
                             backgroundColor: "white",
                             border: "1px solid rgba(0, 0, 0, 0.2)",
+                            boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.2)",
                             "&:hover": {
-                                backgroundColor: "#c0c0c0",
+                                backgroundColor: "#f0f0f0",
                                 transform: "scale(1.15)",
                                 transition: "transform 0.3s ease",
                             },
@@ -142,6 +149,7 @@ function VerticalToolbar({ updateTool, updateColor, color }: Props) {
                                     height: "128px",
                                 }}
                             />
+                            <VerticalAccessibleSlider updateSize={updateSize} size={size} />
                         </div>
                     ) : null}
                 </div>
