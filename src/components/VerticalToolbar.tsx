@@ -20,10 +20,8 @@ function VerticalToolbar({ updateTool, updateColor, updateSize, color, size }: P
     const handleClick = (tool: Tool) => {
         if (isColorPick === false && tool === "Color Picker") {
             isColorPick = true;
-            console.log(isColorPick);
         } else if (isColorPick === true && tool !== "Color Picker") {
             isColorPick = false;
-            console.log(isColorPick);
         }
 
         updateTool(tool);

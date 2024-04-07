@@ -54,6 +54,7 @@ function VerticalAccessibleSlider({ updateSize, size }: Props) {
                             valueLabel: ValueLabelComponent,
                         }}
                         orientation="vertical"
+                        value={size}
                         defaultValue={size}
                         aria-label="Temperature"
                         valueLabelDisplay="auto"
