@@ -7,6 +7,7 @@ import {
 import { Tool, RGB } from "../types/shared.tsx";
 import { loadStrokes } from "../services/CanvasService.ts";
 import { useEffect } from "react";
+import { Vector } from "p5";
 
 
 const WIDTH = window.innerWidth;
@@ -153,7 +154,31 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     // circle for testing panning
     p5.fill(0, 51, 160);
     p5.circle(0, 0, 100);
+
+    p5.noFill();
+    switch (tool) {
+      case "Brush":
+        p5.stroke(color.r, color.g, color.b);
+        break;
+
+      case "Eraser":
+        p5.stroke(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
+        break;
+    }
+    p5.strokeWeight(size);
+    p5.beginShape();
+    currentPos.forEach(coord => p5.curveVertex(coord.x, coord.y));
+    p5.endShape();
   };
+
+  let currentPos : Vector[] = [];
+
+  p5.mouseClicked = () => {
+    if (isP5Init && tool === "Brush") {
+      currentPos = [];
+      currentPos.push(p5.createVector(p5.pmouseX - WIDTH / 2 - center.x, p5.pmouseY - HEIGHT / 2 - center.y));
+    }
+  }
 
   p5.mouseDragged = () => {
     if (!isP5Init) return;
@@ -176,20 +201,24 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
       case "Brush":
         // Tool = "Brush"
-        p5.stroke(color.r, color.g, color.b);
-        p5.strokeWeight(size);
+        // p5.stroke(color.r, color.g, color.b);
+        // p5.strokeWeight(size);
         break;
 
       case "Eraser":
         // Tool = "Eraser"
-        p5.stroke(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
-        p5.strokeWeight(size);
+        // p5.stroke(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
+        // p5.strokeWeight(size);
+        // color.r = BG_COLOR.r;
+        // color.g = BG_COLOR.g;
+        // color.b = BG_COLOR.b;
         break;
 
       case "Color Picker":
         return;
     }
-    p5.line(strokeData.start.x, strokeData.start.y, strokeData.end.x, strokeData.end.y);
+    // p5.line(strokeData.start.x, strokeData.start.y, strokeData.end.x, strokeData.end.y);
+    currentPos.push(p5.createVector(strokeData.end.x, strokeData.end.y));
 
     // Log stroke data to the console
     console.log("Stroke Data:", JSON.stringify(strokeData));
