@@ -46,6 +46,8 @@ function Canvas({ tool, color, size, center, updateCenter }: Props) {
 
   const handleMouseMove = (e) => {
     if (isMouseDown) {
+      setIsMouseMove(!isMouseMove);
+      
       // Convert mouse coordinates to relative canvas coordinates
       const rect = e.target.getBoundingClientRect();
       const x = e.clientX - rect.left - center.x;
@@ -76,7 +78,7 @@ function Canvas({ tool, color, size, center, updateCenter }: Props) {
           sketch={sketch}
           pcenter={center}
           updateCenter={updateCenter}
-          isMouseMove={isMouseDown}
+          isMouseMove={isMouseMove}
           tool={tool}
           color={color}
           size={size}
