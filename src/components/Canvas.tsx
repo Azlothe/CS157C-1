@@ -145,6 +145,16 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
   p5.mouseDragged = () => {
     if (!isP5Init) return;
 
+
+    // Variables to store stroke data
+    let strokeData = {
+      tool: tool,
+      color: {r: color.r, g: color.g, b: color.b},
+      size: size,
+      start: {x: p5.pmouseX - WIDTH / 2 - center.x, y: p5.pmouseY - HEIGHT / 2 - center.y},
+      end: {x: p5.mouseX - WIDTH / 2 - center.x, y: p5.mouseY - HEIGHT / 2 - center.y}
+    };
+
     switch (tool) {
       case "Pan":
         // Tool = "Pan"
@@ -169,7 +179,10 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     const pmouseYOffset = p5.pmouseY - HEIGHT / 2 - center.y;
     const mouseXOffset = p5.mouseX - WIDTH / 2 - center.x;
     const mouseYOffset = p5.mouseY - HEIGHT / 2 - center.y;
-    p5.line(pmouseXOffset, pmouseYOffset, mouseXOffset, mouseYOffset);
+    p5.line(strokeData.start.x, strokeData.start.y, strokeData.end.x, strokeData.end.y);
+
+    // Log stroke data to the console
+  console.log("Stroke Data:", JSON.stringify(strokeData));
 
     // // Tool = "Pan"
     // if (isP5Init && tool === "Pan") {
