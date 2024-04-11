@@ -86,6 +86,8 @@ interface CustomSketchProps extends SketchProps {
   size: number;
 }
 
+let strokes = [];
+
 function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
   let isP5Init = false;
   const center = DEFAULT_CENTER;
@@ -95,7 +97,8 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
   const initCoords = async () => {
     loadStrokes().then((data) => {
-      data.forEach((el) => drawCoords(el.coordinates, el.color, el.weight));
+      strokes = data;
+      // data.forEach((el) => drawCoords(el.coordinates, el.color, el.weight));
     });
   };
 
@@ -132,10 +135,9 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
     // panning
     p5.translate(center.x, center.y);
-
-    // p5.noStroke();
-
+    
     // draw elements in sorted order
+    strokes.forEach((el) => drawCoords(el.coordinates, el.color, el.weight));
 
     // circle for testing panning
     p5.fill(0, 51, 160);
@@ -144,7 +146,6 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
   p5.mouseDragged = () => {
     if (!isP5Init) return;
-
 
     // Variables to store stroke data
     let strokeData = {
@@ -185,7 +186,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     p5.line(strokeData.start.x, strokeData.start.y, strokeData.end.x, strokeData.end.y);
 
     // Log stroke data to the console
-  console.log("Stroke Data:", JSON.stringify(strokeData));
+    console.log("Stroke Data:", JSON.stringify(strokeData));
 
     // // Tool = "Pan"
     // if (isP5Init && tool === "Pan") {
@@ -227,6 +228,25 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
   //         isPan = false;
   //     }
   // };
+
+  p5.mouseMoved = () => {
+    if (!isP5Init || tool !== "Pan" || strokes.length <= 0) return;
+
+    const mouseXOffset = p5.mouseX - WIDTH / 2 - center.x;
+    const mouseYOffset = p5.mouseY - HEIGHT / 2 - center.y;
+
+    // Check if the mouse is hovering over any stroke
+    for (const stroke of strokes) {
+      for (let i = 0; i < stroke.coordinates.length - 1; i++) {
+        const p = stroke.coordinates[i];
+        const dist = p5.dist(p.x, p.y, mouseXOffset, mouseYOffset);
+        if (dist <= stroke.weight) { // use strokeWeight as distance threshold
+            console.log(stroke.username);
+            return;
+        }
+      }
+    }
+  };
 
   p5.updateWithProps = (props) => {
     // to fix negative zeros
