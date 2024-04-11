@@ -173,7 +173,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
   let currentPos : Vector[] = [];
 
-  p5.mouseClicked = () => {
+  p5.mousePressed = () => {
     if (isP5Init && tool === "Brush") {
       currentPos = [];
       currentPos.push(p5.createVector(p5.pmouseX - WIDTH / 2 - center.x, p5.pmouseY - HEIGHT / 2 - center.y));
