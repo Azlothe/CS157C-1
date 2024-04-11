@@ -173,6 +173,9 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
         p5.stroke(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
         p5.strokeWeight(size);
         break;
+
+      case "Color Picker":
+        return;
     }
 
     const pmouseXOffset = p5.pmouseX - WIDTH / 2 - center.x;
