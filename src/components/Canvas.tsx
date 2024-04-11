@@ -35,6 +35,27 @@ function Canvas({ tool, color, size, center, updateCenter }: Props) {
   const [isMouseMove, setIsMouseMove] = useState(false);
   const [strokePath, setStrokePath] = useState<{ x: number; y: number }[]>([]);
 
+
+  const sendStrokeDataToServer = async (strokeData) => {
+    try {
+      // Notice the full URL including the port number (3000) is specified here
+      const response = await fetch('http://localhost:3000/api/strokes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(strokeData),
+      });
+      if (!response.ok) {
+        throw new Error(`Server responded with status: ${response.status}`);
+      }
+      console.log("Stroke data sent successfully to the server.");
+    } catch (error) {
+      console.error('Failed to send stroke data:', error);
+    }
+  };
+  
+
   const handleMouseDown = () => {
     setIsMouseDown(true);
     setStrokePath([]); // Reset the path at the start of a new stroke
@@ -42,7 +63,24 @@ function Canvas({ tool, color, size, center, updateCenter }: Props) {
 
   const handleMouseUp = () => {
     setIsMouseDown(false);
-    console.log("Final Stroke Path:", strokePath);
+  
+    // Convert the color object to an array (tuple)
+    const colorTuple = [color.r, color.g, color.b];
+  
+    // Preparing the stroke data according to the backend schema
+    const strokeData = {
+      userID: 1, // Assuming this is securely managed and just an example here
+      username: "MikeWu", // Same as above, example usage
+      coordinates: strokePath, // Directly using the strokePath as coordinates
+      color: colorTuple,
+      weight: size, // Using the size state as weight
+    };
+  
+    // Logging the stroke data to the console
+    console.log("Stroke Data:", JSON.stringify(strokeData));
+
+    // Send the stroke data to the server
+    sendStrokeDataToServer(strokeData);
   };
 
   const handleMouseMove = (e) => {

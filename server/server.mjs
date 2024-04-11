@@ -1,4 +1,5 @@
 import { client } from './database/connection.mjs';
+import { types } from 'cassandra-driver';
 import ENV from './EnvVars.mjs';
 import express from 'express';
 import cors from 'cors';
@@ -7,6 +8,7 @@ import constants from './database/constants.mjs';
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 initDB();
 
@@ -34,13 +36,15 @@ app.post('/api/strokes', async (req, res) => {
     const time = new Date().toISOString();
 
     try {
-        // Assuming strokeID is auto-increment or you have another method of generating unique IDs
         // Also assuming the color is received as an object and needs to be converted into a tuple
-        const colorTuple = [color.r, color.g, color.b];
+        //const colorTuple = [color.r, color.g, color.b];
+        const colorTuple = new types.Tuple(color.r, color.g, color.b);
 
         // Prepare your INSERT query
-        const insertQuery = `INSERT INTO ${constants.KEYSPACE}.Strokes (strokeID, userID, username, coordinates, color, weight, time) VALUES (uuid(), ?, ?, ?, ?, ?, ?)`;
-        await client.execute(insertQuery, [userID, username, coordinates, colorTuple, weight, time], { prepare: true });
+        const strokeId = Date.now()/1000;
+        
+        const insertQuery = `INSERT INTO ${constants.KEYSPACE}.Strokes (strokeID, userID, username, coordinates, color, weight, time) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        await client.execute(insertQuery, [strokeId, userID, username, coordinates, colorTuple, weight, time], { prepare: true });
         res.status(201).send('Stroke saved successfully');
     } catch (error) {
         console.error('Error saving stroke data:', error);
