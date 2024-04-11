@@ -6,6 +6,8 @@ import {
 } from "@p5-wrapper/react";
 import { Tool, RGB } from "../types/shared.tsx";
 import { loadStrokes } from "../services/CanvasService.ts";
+import { useEffect } from "react";
+
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
@@ -30,25 +32,32 @@ interface Props {
 function Canvas({ tool, color, size, center, updateCenter }: Props) {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isMouseMove, setIsMouseMove] = useState(false);
-
-  // const bottomRight = {
-  //     x: center.x + Math.ceil(WIDTH / 2),
-  //     y: center.y + Math.ceil(HEIGHT / 2),
-  // };
+  const [strokePath, setStrokePath] = useState<{ x: number; y: number }[]>([]);
 
   const handleMouseDown = () => {
     setIsMouseDown(true);
+    setStrokePath([]); // Reset the path at the start of a new stroke
   };
 
   const handleMouseUp = () => {
     setIsMouseDown(false);
+    console.log("Final Stroke Path:", strokePath);
   };
 
-  const handleMouseMove = () => {
+  const handleMouseMove = (e) => {
     if (isMouseDown) {
-      setIsMouseMove(!isMouseMove);
+      // Convert mouse coordinates to relative canvas coordinates
+      const rect = e.target.getBoundingClientRect();
+      const x = e.clientX - rect.left - center.x;
+      const y = e.clientY - rect.top - center.y;
+      setStrokePath((prevPath) => [...prevPath, { x, y }]);
     }
   };
+
+  // checking to see when the stroke path is updated
+  useEffect(() => {
+  console.log("Stroke Path Updated:", strokePath);
+  }, [strokePath]);
 
   return (
     <>
@@ -67,7 +76,7 @@ function Canvas({ tool, color, size, center, updateCenter }: Props) {
           sketch={sketch}
           pcenter={center}
           updateCenter={updateCenter}
-          isMouseMove={isMouseMove}
+          isMouseMove={isMouseDown}
           tool={tool}
           color={color}
           size={size}
@@ -178,56 +187,11 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
       case "Color Picker":
         return;
     }
-
-    const pmouseXOffset = p5.pmouseX - WIDTH / 2 - center.x;
-    const pmouseYOffset = p5.pmouseY - HEIGHT / 2 - center.y;
-    const mouseXOffset = p5.mouseX - WIDTH / 2 - center.x;
-    const mouseYOffset = p5.mouseY - HEIGHT / 2 - center.y;
     p5.line(strokeData.start.x, strokeData.start.y, strokeData.end.x, strokeData.end.y);
 
     // Log stroke data to the console
     console.log("Stroke Data:", JSON.stringify(strokeData));
-
-    // // Tool = "Pan"
-    // if (isP5Init && tool === "Pan") {
-    //     center.x += p5.mouseX - p5.pmouseX; // dX
-    //     center.y += p5.mouseY - p5.pmouseY; // dY
-    // }
-
-    // // Tool = "Brush"
-    // if (isP5Init && tool === "Brush") {
-    //     p5.stroke(color.r, color.g, color.b);
-    //     p5.strokeWeight(size);
-    //     const pmouseXOffset = p5.pmouseX - WIDTH / 2 - center.x;
-    //     const pmouseYOffset = p5.pmouseY - HEIGHT / 2 - center.y;
-    //     const mouseXOffset = p5.mouseX - WIDTH / 2 - center.x;
-    //     const mouseYOffset = p5.mouseY - HEIGHT / 2 - center.y;
-    //     p5.line(pmouseXOffset, pmouseYOffset, mouseXOffset, mouseYOffset);
-    // }
-
-    // // Tool = "Eraser"
-    // if (isP5Init && tool === "Eraser") {
-    //     p5.stroke(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
-    //     p5.strokeWeight(size);
-    //     const pmouseXOffset = p5.pmouseX - WIDTH / 2 - center.x;
-    //     const pmouseYOffset = p5.pmouseY - HEIGHT / 2 - center.y;
-    //     const mouseXOffset = p5.mouseX - WIDTH / 2 - center.x;
-    //     const mouseYOffset = p5.mouseY - HEIGHT / 2 - center.y;
-    //     p5.line(pmouseXOffset, pmouseYOffset, mouseXOffset, mouseYOffset);
-    // }
   };
-
-  // p5.keyPressed = () => {
-  //     if (p5.key == " ") {
-  //         isPan = true;
-  //     }
-  // };
-
-  // p5.keyReleased = () => {
-  //     if (p5.key == " ") {
-  //         isPan = false;
-  //     }
-  // };
 
   p5.mouseMoved = () => {
     if (!isP5Init || tool !== "Pan" || strokes.length <= 0) return;
