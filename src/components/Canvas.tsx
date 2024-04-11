@@ -147,6 +147,8 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
     // panning
     p5.translate(center.x, center.y);
+
+    p5.scale(scaleFactor);
     
     // draw elements in sorted order
     strokes.forEach((el) => drawCoords(el.coordinates, el.color, el.weight));
@@ -165,7 +167,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
         p5.stroke(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
         break;
     }
-    p5.strokeWeight(size);
+    p5.strokeWeight(size);  
     p5.beginShape();
     currentPos.forEach(coord => p5.curveVertex(coord.x, coord.y));
     p5.endShape();
@@ -223,6 +225,13 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     // Log stroke data to the console
     console.log("Stroke Data:", JSON.stringify(strokeData));
   };
+
+  let scaleFactor = 1;
+
+  p5.mouseWheel = (event : WheelEvent) => {
+    p5.background(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
+    scaleFactor *= event.deltaY < 0 ? 1.05 : 0.95;
+  }
 
   p5.mouseMoved = () => {
     if (!isP5Init || tool !== "Pan" || strokes.length <= 0) return;
