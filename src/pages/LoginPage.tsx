@@ -58,14 +58,7 @@ function LoginPage() {
                             alt="Image"
                             width="1600px"
                             height="1200px"
-                            className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-                        />
-                        <img
-                            src={SJSU}
-                            alt="Image"
-                            width="1600px"
-                            height="1200px"
-                            className="absolute top-0 left-0 h-full w-full object-cover dark:brightness-[0.2] filter blur-md"
+                            className="h-full w-full object-cover"
                         />
                         <img
                             src={SpartanDraw}
