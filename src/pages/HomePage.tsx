@@ -8,7 +8,7 @@ const HomePage = () => {
         <h1 className="text-gray-100">SpartanDraw</h1>
       </div>
       <div className="text-center m-8">
-        <a href="/canvas" className="bg-gray-100 p-3 rounded-lg">Go to Canvas</a>
+        <a href="/login" className="bg-gray-100 p-3 rounded-lg">Go to Login</a>
       </div>
     </>
   );
