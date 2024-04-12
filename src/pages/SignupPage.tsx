@@ -38,7 +38,7 @@ function SignupPage() {
                             <Button type="submit" className="w-full">
                                 Sign up
                             </Button>
-                            <Button variant="outline" className="w-full">
+                            <Button variant="yellow" className="w-full">
                                 <GoogleIcon style={{ marginRight: "8px", color: "#2563EB" }} />
                                 Sign up with Google
                             </Button>

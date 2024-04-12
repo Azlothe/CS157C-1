@@ -33,7 +33,7 @@ function LoginPage() {
                             <Button type="submit" className="w-full">
                                 Log in
                             </Button>
-                            <Button variant="outline" className="w-full">
+                            <Button variant="yellow" className="w-full">
                                 <GoogleIcon
                                     style={{
                                         marginRight: "8px",
