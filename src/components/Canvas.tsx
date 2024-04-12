@@ -145,6 +145,8 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
   let color = DEFAULT_COLOR;
   let size = DEFAULT_SIZE;
 
+  let scaleFactor = 1;
+
   const initCoords = async () => {
     loadStrokes().then((data) => {
       strokes = data;
@@ -182,6 +184,8 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     if (tool === "Pan") {
       p5.background(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
     }
+
+    p5.scale(scaleFactor);
 
     // panning
     p5.translate(center.x, center.y);
@@ -261,6 +265,11 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     // Log stroke data to the console
     console.log("Stroke Data:", JSON.stringify(strokeData));
   };
+
+  p5.mouseWheel = (event : WheelEvent) => {
+    p5.background(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
+    scaleFactor *= event.deltaY < 0 ? 1.05 : 0.95;
+  }
 
   p5.mouseMoved = () => {
     if (!isP5Init || tool !== "Pan" || strokes.length <= 0) return;
