@@ -2,11 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import GoogleIcon from "@mui/icons-material/Google";
+import SJSU from "../assets/sjsu.png";
+import SpartanDraw from "/spartandraw.svg";
 
 function LoginPage() {
     return (
         <>
-            <div className="min-h-screen grid grid-cols-2">
+            <div className="min-h-screen grid lg:grid-cols-2">
                 <div className="flex items-center justify-center py-12">
                     <div className="mx-auto grid w-[350px] gap-6">
                         <div className="grid gap-2 text-center">
@@ -32,7 +34,12 @@ function LoginPage() {
                                 Log in
                             </Button>
                             <Button variant="outline" className="w-full">
-                                <GoogleIcon style={{ marginRight: "8px", color: "#2563EB" }} />
+                                <GoogleIcon
+                                    style={{
+                                        marginRight: "8px",
+                                        color: "#2563EB",
+                                    }}
+                                />
                                 Log in with Google
                             </Button>
                         </div>
@@ -45,13 +52,29 @@ function LoginPage() {
                     </div>
                 </div>
                 <div className="hidden bg-muted lg:block">
-                    {/* <Image
-                    src="/placeholder.svg"
-                    alt="Image"
-                    width="1920"
-                    height="1080"
-                    className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-                /> */}
+                    <div className="relative h-full">
+                        <img
+                            src={SJSU}
+                            alt="Image"
+                            width="1600px"
+                            height="1200px"
+                            className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+                        />
+                        <img
+                            src={SJSU}
+                            alt="Image"
+                            width="1600px"
+                            height="1200px"
+                            className="absolute top-0 left-0 h-full w-full object-cover dark:brightness-[0.2] filter blur-md"
+                        />
+                        <img
+                            src={SpartanDraw}
+                            alt="Image"
+                            width="50%"
+                            height="50%"
+                            className="absolute top-0 left-0 right-0 object-cover bottom-0 mx-auto my-auto filter drop-shadow-2xl animate-wiggle"
+                        />
+                    </div>
                 </div>
             </div>
         </>
