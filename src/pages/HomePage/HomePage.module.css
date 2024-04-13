@@ -3,8 +3,7 @@
 
 
 .link {
-  @apply bg-gray-100 p-3 rounded-lg;
-  font-weight: 500;
+  @apply bg-gray-100 p-3 rounded-lg font-medium;
   color: #646cff;
   text-decoration: inherit;
 }
@@ -17,17 +16,10 @@
 }
 
 .body {
-  @apply bg-gradient-to-bl from-blue-400  to-blue-800 justify-center;
+  @apply bg-gradient-to-bl from-blue-400  to-blue-800 justify-center m-0 flex flex-col place-items-center min-w-[320px] min-h-screen font-normal;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
 
   line-height: 1.5;
-  font-weight: 400;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
