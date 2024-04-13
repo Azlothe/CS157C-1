@@ -1,4 +1,5 @@
 import logo from "/spartandraw.svg";
+import "./HomePage.css"
 
 const HomePage = () => {
   return (
