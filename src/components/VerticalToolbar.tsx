@@ -67,7 +67,7 @@ function VerticalToolbar({ updateTool, updateColor, updateSize, color, size }: P
                             transform: "scale(1.15)",
                             transition: "transform 0.3s ease",
                         },
-                        margin: "2px",
+                        margin: "4px",
                     }}
                 >
                     <PanIcon />
@@ -84,7 +84,7 @@ function VerticalToolbar({ updateTool, updateColor, updateSize, color, size }: P
                             transform: "scale(1.15)",
                             transition: "transform 0.3s ease",
                         },
-                        margin: "2px",
+                        margin: "4px",
                     }}
                 >
                     <BrushIcon />
@@ -101,7 +101,7 @@ function VerticalToolbar({ updateTool, updateColor, updateSize, color, size }: P
                             transform: "scale(1.15)",
                             transition: "transform 0.3s ease",
                         },
-                        margin: "2px",
+                        margin: "4px",
                     }}
                 >
                     <EraserIcon />
@@ -124,7 +124,7 @@ function VerticalToolbar({ updateTool, updateColor, updateSize, color, size }: P
                                 transform: "scale(1.15)",
                                 transition: "transform 0.3s ease",
                             },
-                            margin: "2px",
+                            margin: "4px",
                         }}
                     >
                         <ColorPickerIcon hexColor={hexColor} />
