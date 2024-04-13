@@ -3,7 +3,7 @@
 
 
 .link {
-  @apply bg-gray-100 p-3 rounded-lg font-medium;
+  @apply bg-gray-100 p-3 rounded-lg font-medium m-2;
   color: #646cff;
   text-decoration: inherit;
 }
