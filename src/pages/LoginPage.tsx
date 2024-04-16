@@ -4,16 +4,8 @@ import { Label } from "@/components/ui/label";
 import GoogleIcon from "@mui/icons-material/Google";
 import SJSU from "../assets/sjsu.png";
 import SpartanDraw from "/spartandraw.svg";
-import { useEffect, useState } from "react";
 
 function LoginPage() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
-    useEffect(() => {
-        console.log(email, password);
-    }, [email, password]);
-
     const handleLogin = async () => {
         try {
             // call login api endpoint
@@ -33,7 +25,7 @@ function LoginPage() {
                             <h1 className="text-3xl font-bold">Log in</h1>
                         </div>
                         <div className="grid gap-4">
-                            <div className="grid gap-2">
+                            {/* <div className="grid gap-2">
                                 <Label htmlFor="email">Email</Label>
                                 <Input
                                     id="email"
@@ -62,7 +54,7 @@ function LoginPage() {
                                 onClick={handleLogin}
                             >
                                 Log in
-                            </Button>
+                            </Button> */}
                             <Button variant="yellow" className="w-full">
                                 <GoogleIcon
                                     style={{
