@@ -6,25 +6,25 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { useState } from "react";
 import { auth, provider } from "../services/FirebaseService";
 import { signInWithPopup } from "firebase/auth";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 function SignupPage() {
     const [username, setUsername] = useState<string>("");
 
     const navigate = useNavigate();
 
-    const handleSignup = () => {
-        signInWithPopup(auth, provider)
-            .then((data) => {
-                const email = data.user.email;
-
-                // TODO: save user email and username to database
-
-                if (email && username) navigate("/canvas");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+    const handleSignup = async () => {
+        try {
+            const data = await signInWithPopup(auth, provider); // authenticates the current user
+            const email = data.user.email;
+    
+            // TODO: check if user already exists in database
+            // if so, navigate to /canvas page
+            if (email && username) navigate("/canvas");
+            // else store email and username into database
+        } catch (error) {
+            console.log("Signup Error:", error);
+        }
     };
 
     return (
