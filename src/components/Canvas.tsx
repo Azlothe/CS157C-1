@@ -145,6 +145,8 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
   let color = DEFAULT_COLOR;
   let size = DEFAULT_SIZE;
 
+
+  // this inits the coordinates from the server 
   const initCoords = async () => {
     loadStrokes().then((data) => {
       strokes = data;
@@ -152,11 +154,13 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     });
   };
 
+  // this function is used to draw each of the coordinates 
   const drawCoords = (
     coords: { x: number; y: number }[],
     color: number[],
     weight: number
   ) => {
+    console.log("Drawing saved coords");
     p5.strokeWeight(weight);
     p5.stroke(...color);
     p5.noFill();
@@ -165,6 +169,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     p5.endShape();
   };
 
+  // this preload runs before the canvas is drawn to the user 
   p5.preload = () => {
     initCoords();
   };

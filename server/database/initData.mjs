@@ -63,7 +63,7 @@ VALUES
 
 const initData = async () => {
     console.log("inserting data");
-    initStrokesData();
+    //initStrokesData();
 }
 
 export default initData;
