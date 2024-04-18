@@ -39,7 +39,7 @@ function Canvas({ tool, color, size, center, updateCenter }: Props) {
   const sendStrokeDataToServer = async (strokeData) => {
     try {
       // Notice the full URL including the port number (3000) is specified here
-      const response = await fetch('http://localhost:3000/api/strokes', {
+      const response = await fetch(`${import.meta.env.VITE_SERVER}/strokes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
