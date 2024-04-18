@@ -3,7 +3,7 @@ import Canvas from "../components/Canvas.tsx";
 import VerticalToolbar from "../components/VerticalToolbar.tsx";
 import { Tool, RGB } from "../types/shared.tsx";
 import HorizontalToolbar from "../components/HorizontalToolbar.tsx";
-import { getEmail } from "../context/AuthContext.ts"
+import { getEmail } from "../context/AuthContext.ts";
 
 const DEFAULT_TOOL: Tool = "Brush";
 const DEFAULT_COLOR: RGB = { r: 0, g: 0, b: 0 };
