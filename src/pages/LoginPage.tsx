@@ -1,24 +1,26 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+// import { Input } from "@/components/ui/input";
+// import { Label } from "@/components/ui/label";
 import GoogleIcon from "@mui/icons-material/Google";
 import SJSU from "../assets/sjsu.png";
 import SpartanDraw from "/spartandraw.svg";
-import { useEffect, useState } from "react";
+import { auth, provider } from "../services/FirebaseService";
+import { signInWithPopup } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
-    useEffect(() => {
-        console.log(email, password);
-    }, [email, password]);
+    const navigate = useNavigate();
 
     const handleLogin = async () => {
         try {
-            // call login api endpoint
-            // if login successful, redirect to canvas page
-            // else handle error
+            const data = await signInWithPopup(auth, provider); // authenticates the current user
+            const email = data.user.email;
+
+            // TODO: check if user already exists in database
+            // if so, navigate to /canvas page
+            // else log out and navigate to /signup page
+            auth.signOut();
+            navigate("/signup");
         } catch (error) {
             console.error("Login Error:", error);
         }
@@ -33,7 +35,7 @@ function LoginPage() {
                             <h1 className="text-3xl font-bold">Log in</h1>
                         </div>
                         <div className="grid gap-4">
-                            <div className="grid gap-2">
+                            {/* <div className="grid gap-2">
                                 <Label htmlFor="email">Email</Label>
                                 <Input
                                     id="email"
@@ -62,8 +64,12 @@ function LoginPage() {
                                 onClick={handleLogin}
                             >
                                 Log in
-                            </Button>
-                            <Button variant="yellow" className="w-full">
+                            </Button> */}
+                            <Button
+                                variant="yellow"
+                                className="w-full"
+                                onClick={handleLogin}
+                            >
                                 <GoogleIcon
                                     style={{
                                         marginRight: "8px",

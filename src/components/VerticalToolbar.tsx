@@ -3,6 +3,8 @@ import IconButton from "@mui/material/IconButton";
 import VerticalAccessibleSlider from "./VerticalAccessibleSlider.tsx";
 import { RgbColorPicker } from "react-colorful";
 import { Tool, RGB } from "../types/shared.tsx";
+import { getEmail } from "../context/AuthContext.ts";
+import { useEffect, useState } from "react";
 
 interface Props {
     updateTool: (tool: Tool) => void;
@@ -14,7 +16,15 @@ interface Props {
 
 let isColorPick = false;
 
-function VerticalToolbar({ updateTool, updateColor, updateSize, color, size }: Props) {
+function VerticalToolbar({
+    updateTool,
+    updateColor,
+    updateSize,
+    color,
+    size,
+}: Props) {
+    const [email, setEmail] = useState("");
+
     const hexColor = rgbToHex(color);
 
     const handleClick = (tool: Tool) => {
@@ -39,6 +49,17 @@ function VerticalToolbar({ updateTool, updateColor, updateSize, color, size }: P
 
         return "#" + toHex(r) + toHex(g) + toHex(b);
     }
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const userEmail: string = (await getEmail()) as string;
+                setEmail(userEmail);
+            } catch (error) {
+                console.error(error);
+            }
+        })();
+    }, []);
 
     return (
         <>
@@ -72,85 +93,92 @@ function VerticalToolbar({ updateTool, updateColor, updateSize, color, size }: P
                 >
                     <PanIcon />
                 </IconButton>
-                <IconButton
-                    aria-label="brush"
-                    onClick={() => handleClick("Brush")}
-                    sx={{
-                        backgroundColor: "white",
-                        border: "1px solid rgba(0, 0, 0, 0.2)",
-                        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.2)",
-                        "&:hover": {
-                            backgroundColor: "#f0f0f0",
-                            transform: "scale(1.15)",
-                            transition: "transform 0.3s ease",
-                        },
-                        margin: "4px",
-                    }}
-                >
-                    <BrushIcon />
-                </IconButton>
-                <IconButton
-                    aria-label="eraser"
-                    onClick={() => handleClick("Eraser")}
-                    sx={{
-                        backgroundColor: "white",
-                        border: "1px solid rgba(0, 0, 0, 0.2)",
-                        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.2)",
-                        "&:hover": {
-                            backgroundColor: "#f0f0f0",
-                            transform: "scale(1.15)",
-                            transition: "transform 0.3s ease",
-                        },
-                        margin: "4px",
-                    }}
-                >
-                    <EraserIcon />
-                </IconButton>
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "flex-start",
-                    }}
-                >
-                    <IconButton
-                        aria-label="color-picker"
-                        onClick={() => handleClick("Color Picker")}
-                        sx={{
-                            backgroundColor: "white",
-                            border: "1px solid rgba(0, 0, 0, 0.2)",
-                            boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.2)",
-                            "&:hover": {
-                                backgroundColor: "#f0f0f0",
-                                transform: "scale(1.15)",
-                                transition: "transform 0.3s ease",
-                            },
-                            margin: "4px",
-                        }}
-                    >
-                        <ColorPickerIcon hexColor={hexColor} />
-                    </IconButton>
-                    {isColorPick ? (
+                {email && (
+                    <>
+                        <IconButton
+                            aria-label="brush"
+                            onClick={() => handleClick("Brush")}
+                            sx={{
+                                backgroundColor: "white",
+                                border: "1px solid rgba(0, 0, 0, 0.2)",
+                                boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.2)",
+                                "&:hover": {
+                                    backgroundColor: "#f0f0f0",
+                                    transform: "scale(1.15)",
+                                    transition: "transform 0.3s ease",
+                                },
+                                margin: "4px",
+                            }}
+                        >
+                            <BrushIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="eraser"
+                            onClick={() => handleClick("Eraser")}
+                            sx={{
+                                backgroundColor: "white",
+                                border: "1px solid rgba(0, 0, 0, 0.2)",
+                                boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.2)",
+                                "&:hover": {
+                                    backgroundColor: "#f0f0f0",
+                                    transform: "scale(1.15)",
+                                    transition: "transform 0.3s ease",
+                                },
+                                margin: "4px",
+                            }}
+                        >
+                            <EraserIcon />
+                        </IconButton>
                         <div
                             style={{
                                 display: "flex",
                                 alignItems: "flex-start",
-                                position: "absolute",
-                                left: "72px",
                             }}
                         >
-                            <RgbColorPicker
-                                className="color-picker"
-                                color={color}
-                                onChange={handleColor}
-                                style={{
-                                    width: "128px",
-                                    height: "128px",
+                            <IconButton
+                                aria-label="color-picker"
+                                onClick={() => handleClick("Color Picker")}
+                                sx={{
+                                    backgroundColor: "white",
+                                    border: "1px solid rgba(0, 0, 0, 0.2)",
+                                    boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.2)",
+                                    "&:hover": {
+                                        backgroundColor: "#f0f0f0",
+                                        transform: "scale(1.15)",
+                                        transition: "transform 0.3s ease",
+                                    },
+                                    margin: "4px",
                                 }}
-                            />
-                            <VerticalAccessibleSlider updateSize={updateSize} size={size} />
+                            >
+                                <ColorPickerIcon hexColor={hexColor} />
+                            </IconButton>
+                            {isColorPick ? (
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "flex-start",
+                                        position: "absolute",
+                                        left: "72px",
+                                    }}
+                                >
+                                    <RgbColorPicker
+                                        className="color-picker"
+                                        color={color}
+                                        onChange={handleColor}
+                                        style={{
+                                            width: "128px",
+                                            height: "128px",
+                                        }}
+                                    />
+                                    <VerticalAccessibleSlider
+                                        updateSize={updateSize}
+                                        size={size}
+                                    />
+                                </div>
+                            ) : null}
                         </div>
-                    ) : null}
-                </div>
+                    </>
+                )}
             </Toolbar>
         </>
     );

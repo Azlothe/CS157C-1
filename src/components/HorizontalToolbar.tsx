@@ -1,20 +1,39 @@
 import Toolbar from "@mui/material/Toolbar";
 import { Button } from "@/components/ui/button";
+import { auth } from "../services/FirebaseService";
+import { useNavigate } from "react-router-dom";
+import { getEmail } from "../context/AuthContext.ts";
+import { useEffect, useState } from "react";
 
 interface Props {
     center: { x: number; y: number };
 }
 
 function HorizontalToolbar({ center }: Props) {
+    const [email, setEmail] = useState("");
+
+    const navigate = useNavigate();
+
     const handleLogout = async () => {
         try {
-            // call logout api endpoint
-            // if logout successful, redirect to home page
-            // else handle error
+            await auth.signOut();
+            console.log("Logged out");
+            navigate("/");
         } catch (error) {
-            console.error("Logout Error:", error);
+            console.error(error);
         }
     };
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const userEmail: string = (await getEmail()) as string;
+                setEmail(userEmail);
+            } catch (error) {
+                console.error(error);
+            }
+        })();
+    }, []);
 
     return (
         <>
@@ -43,7 +62,7 @@ function HorizontalToolbar({ center }: Props) {
                     ({center.x}, {center.y})
                 </b>
                 <Button className="mr-[-12px]" onClick={handleLogout}>
-                    Log out
+                    {email ? ("Log out") : ("Go back")}
                 </Button>
             </Toolbar>
         </>
