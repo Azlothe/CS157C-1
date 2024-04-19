@@ -77,10 +77,10 @@ function Canvas({ tool, color, size, center, updateCenter }: Props) {
     };
   
     // Logging the stroke data to the console
-    // console.log("Stroke Data:", JSON.stringify(strokeData));
+    console.log("Stroke Data:", JSON.stringify(strokeData));
 
     // Send the stroke data to the server
-    // sendStrokeDataToServer(strokeData);
+    sendStrokeDataToServer(strokeData);
   };
 
   const handleMouseMove = (e) => {
@@ -97,7 +97,7 @@ function Canvas({ tool, color, size, center, updateCenter }: Props) {
 
   // checking to see when the stroke path is updated
   useEffect(() => {
-  // console.log("Stroke Path Updated:", strokePath);
+  console.log("Stroke Path Updated:", strokePath);
   }, [strokePath]);
 
   return (
@@ -263,7 +263,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     currentPos.push(p5.createVector(strokeData.end.x, strokeData.end.y));
 
     // Log stroke data to the console
-    // console.log("Stroke Data:", JSON.stringify(strokeData));
+    console.log("Stroke Data:", JSON.stringify(strokeData));
   };
 
   p5.mouseWheel = (event : WheelEvent) => {
