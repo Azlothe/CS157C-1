@@ -145,6 +145,8 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
   let color = DEFAULT_COLOR;
   let size = DEFAULT_SIZE;
 
+  let scaleFactor = 1;
+
   const initCoords = async () => {
     loadStrokes().then((data) => {
       strokes = data;
@@ -183,11 +185,13 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
       p5.background(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
     }
 
+    p5.scale(scaleFactor);
+
     // panning
     p5.translate(center.x, center.y);
     
     // draw elements in sorted order
-    strokes.forEach((el) => drawCoords(el.coordinates, el.color, el.weight));
+    // strokes.forEach((el) => drawCoords(el.coordinates, el.color, el.weight));
 
     // circle for testing panning
     p5.fill(0, 51, 160);
@@ -214,7 +218,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
   p5.mousePressed = () => {
     if (isP5Init && tool === "Brush") {
       currentPos = [];
-      currentPos.push(p5.createVector(p5.pmouseX - WIDTH / 2 - center.x, p5.pmouseY - HEIGHT / 2 - center.y));
+      currentPos.push(p5.createVector( (p5.pmouseX - WIDTH / 2 - center.x)/scaleFactor, (p5.pmouseY - HEIGHT / 2 - center.y)/scaleFactor ));
     }
   }
 
@@ -227,7 +231,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
       color: {r: color.r, g: color.g, b: color.b},
       size: size,
       start: {x: p5.pmouseX - WIDTH / 2 - center.x, y: p5.pmouseY - HEIGHT / 2 - center.y},
-      end: {x: p5.mouseX - WIDTH / 2 - center.x, y: p5.mouseY - HEIGHT / 2 - center.y}
+      end: {x: (p5.mouseX - WIDTH / 2 - center.x)/scaleFactor, y: (p5.mouseY - HEIGHT / 2 - center.y)/scaleFactor}
     };
 
     switch (tool) {
@@ -261,6 +265,11 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     // Log stroke data to the console
     console.log("Stroke Data:", JSON.stringify(strokeData));
   };
+
+  p5.mouseWheel = (event : WheelEvent) => {
+    p5.background(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
+    scaleFactor *= event.deltaY < 0 ? 1.05 : 0.95;
+  }
 
   p5.mouseMoved = () => {
     if (!isP5Init || tool !== "Pan" || strokes.length <= 0) return;
