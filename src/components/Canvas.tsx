@@ -77,10 +77,10 @@ function Canvas({ tool, color, size, center, updateCenter }: Props) {
     };
   
     // Logging the stroke data to the console
-    console.log("Stroke Data:", JSON.stringify(strokeData));
+    // console.log("Stroke Data:", JSON.stringify(strokeData));
 
     // Send the stroke data to the server
-    sendStrokeDataToServer(strokeData);
+    // sendStrokeDataToServer(strokeData);
   };
 
   const handleMouseMove = (e) => {
@@ -97,7 +97,7 @@ function Canvas({ tool, color, size, center, updateCenter }: Props) {
 
   // checking to see when the stroke path is updated
   useEffect(() => {
-  console.log("Stroke Path Updated:", strokePath);
+  // console.log("Stroke Path Updated:", strokePath);
   }, [strokePath]);
 
   return (
@@ -191,7 +191,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     p5.translate(center.x, center.y);
     
     // draw elements in sorted order
-    strokes.forEach((el) => drawCoords(el.coordinates, el.color, el.weight));
+    // strokes.forEach((el) => drawCoords(el.coordinates, el.color, el.weight));
 
     // circle for testing panning
     p5.fill(0, 51, 160);
@@ -218,7 +218,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
   p5.mousePressed = () => {
     if (isP5Init && tool === "Brush") {
       currentPos = [];
-      currentPos.push(p5.createVector(p5.pmouseX - WIDTH / 2 - center.x, p5.pmouseY - HEIGHT / 2 - center.y));
+      currentPos.push(p5.createVector( (p5.pmouseX - WIDTH / 2 - center.x)/scaleFactor, (p5.pmouseY - HEIGHT / 2 - center.y)/scaleFactor ));
     }
   }
 
@@ -231,7 +231,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
       color: {r: color.r, g: color.g, b: color.b},
       size: size,
       start: {x: p5.pmouseX - WIDTH / 2 - center.x, y: p5.pmouseY - HEIGHT / 2 - center.y},
-      end: {x: p5.mouseX - WIDTH / 2 - center.x, y: p5.mouseY - HEIGHT / 2 - center.y}
+      end: {x: (p5.mouseX - WIDTH / 2 - center.x)/scaleFactor, y: (p5.mouseY - HEIGHT / 2 - center.y)/scaleFactor}
     };
 
     switch (tool) {
@@ -263,7 +263,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     currentPos.push(p5.createVector(strokeData.end.x, strokeData.end.y));
 
     // Log stroke data to the console
-    console.log("Stroke Data:", JSON.stringify(strokeData));
+    // console.log("Stroke Data:", JSON.stringify(strokeData));
   };
 
   p5.mouseWheel = (event : WheelEvent) => {
