@@ -6,6 +6,7 @@ const createUserInfo = async () => {
     const query = `CREATE TABLE IF NOT EXISTS ${constants.KEYSPACE}.Users (
         userID int,
         username text,
+        email text,
         PRIMARY KEY(userID)
     );`
     await client.execute(query);

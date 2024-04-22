@@ -7,6 +7,7 @@ import SpartanDraw from "/spartandraw.svg";
 import { auth, provider } from "../services/FirebaseService";
 import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { userExists } from "@/services/AuthService";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -14,13 +15,20 @@ function LoginPage() {
     const handleLogin = async () => {
         try {
             const data = await signInWithPopup(auth, provider); // authenticates the current user
-            const email = data.user.email;
+            const email  = data.user.email;
 
+            
+            
             // TODO: check if user already exists in database
             // if so, navigate to /canvas page
             // else log out and navigate to /signup page
-            auth.signOut();
-            navigate("/signup");
+            if (email && await userExists(email)) {
+                navigate("/canvas");
+            }
+            else {
+                auth.signOut();
+                navigate("/signup");
+            }
         } catch (error) {
             console.error("Login Error:", error);
         }

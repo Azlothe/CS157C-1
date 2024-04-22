@@ -59,11 +59,32 @@ VALUES
     APPLY BATCH;`;
 
     client.execute(query);
-};
+  };
+  
+  const initUserData = async () => {
+    const query = `BEGIN BATCH
+    
+    INSERT INTO Users (userID, username, email) VALUES (1, 'JohnDoe', 'john@example.com');
+    
+  INSERT INTO Users (userID, username, email) VALUES (2, 'JaneSmith', 'jane@example.com');
+  
+  INSERT INTO Users (userID, username, email) VALUES (25, 'Alice', 'alice@example.com');
+  
+  INSERT INTO Users (userID, username, email) VALUES (26, 'Bob', 'bob@example.com');
+  
+  INSERT INTO Users (userID, username, email) VALUES (27, 'Eva', 'eva@example.com');
+  
+  INSERT INTO Users (userID, username, email) VALUES (50, 'Sarah', 'sarah@example.com');
+  
+  APPLY BATCH;`;
+
+  client.execute(query);
+}
 
 const initData = async () => {
-    console.log("inserting data");
-    initStrokesData();
+  console.log("inserting data");
+  initStrokesData();
+  initUserData();
 }
 
 export default initData;
