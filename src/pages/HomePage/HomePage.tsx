@@ -2,8 +2,13 @@ import logo from "/spartandraw.svg";
 import styles from "./HomePage.module.css"
 
 const Links = {
-  Login: "/login",
-  Canvas: "/canvas"
+  Login: {
+    link: "/login",
+  },
+  Canvas: {
+    link: "/canvas",
+    name: "View Canvas as Guest",
+  },
 }
 
 const HomePage = () => {
@@ -16,7 +21,7 @@ const HomePage = () => {
       </div>
       <div className="text-center m-4 flex flex-col">
         {
-          Object.entries(Links).map( ([key, val]) => <a href={val} className={styles.link}>Go to {key}</a>)
+          Object.entries(Links).map( ([key, val]) => <a href={val.link} className={styles.link}>{val.name ?? `Go to ${key}`}</a>)
         }
       </div>
     </div>
