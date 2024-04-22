@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    const { userID, username, coordinates, color, weight } = req.body;
+    const { username, coordinates, color, weight, email } = req.body;
 
     // Generating a current timestamp for the stroke
     const time = new Date().toISOString();
@@ -30,8 +30,8 @@ router.post('/', async (req, res) => {
         // Prepare your INSERT query
         const strokeId = Date.now()/1000;
         
-        const insertQuery = `INSERT INTO ${constants.KEYSPACE}.Strokes (strokeID, userID, username, coordinates, color, weight, time) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-        await client.execute(insertQuery, [strokeId, userID, username, coordinates, colorTuple, weight, time], { prepare: true });
+        const insertQuery = `INSERT INTO ${constants.KEYSPACE}.Strokes (strokeID, username, email, coordinates, color, weight, time) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        await client.execute(insertQuery, [strokeId, username, email, coordinates, colorTuple, weight, time], { prepare: true });
         res.status(201).send('Stroke saved successfully');
     } catch (error) {
         console.error('Error saving stroke data:', error);

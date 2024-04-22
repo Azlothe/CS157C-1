@@ -69,8 +69,8 @@ function Canvas({ tool, color, size, center, updateCenter }: Props) {
   
     // Preparing the stroke data according to the backend schema
     const strokeData = {
-      userID: 1, // Assuming this is securely managed and just an example here
       username: "MikeWu", // Same as above, example usage
+      email: "mikewu@gmail.com",
       coordinates: strokePath, // Directly using the strokePath as coordinates
       color: colorTuple,
       weight: size, // Using the size state as weight
