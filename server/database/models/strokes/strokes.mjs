@@ -14,9 +14,9 @@ const createStrokes = async () => {
     await createCoordinateType();
 
     const query = `CREATE TABLE IF NOT EXISTS ${constants.KEYSPACE}.Strokes (
-        strokeID int, 
-        userID int, 
+        strokeID UUID, 
         username text, 
+        email text,
         coordinates list<frozen <Coordinate>>, 
         color tuple<smallint, smallint, smallint>, 
         weight smallint, 

@@ -4,10 +4,10 @@ import constants from "../../constants.mjs";
 const createUserInfo = async () => {
 
     const query = `CREATE TABLE IF NOT EXISTS ${constants.KEYSPACE}.Users (
-        userID int,
+        userID UUID,
         username text,
         email text,
-        PRIMARY KEY(userID)
+        PRIMARY KEY(email)
     );`
     await client.execute(query);
     console.log("created user table");

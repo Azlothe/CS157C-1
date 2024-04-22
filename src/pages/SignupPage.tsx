@@ -7,6 +7,7 @@ import { useState } from "react";
 import { auth, provider } from "../services/FirebaseService";
 import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { signUp, userExists } from "@/services/AuthService";
 
 function SignupPage() {
     const [username, setUsername] = useState<string>("");
@@ -17,11 +18,15 @@ function SignupPage() {
         try {
             const data = await signInWithPopup(auth, provider); // authenticates the current user
             const email = data.user.email;
-    
+
+            
             // TODO: check if user already exists in database
             // if so, navigate to /canvas page
-            if (email && username) navigate("/canvas");
             // else store email and username into database
+            if (email && username && !await userExists(email)) 
+                await signUp(username, email);
+            
+            navigate("/canvas");
         } catch (error) {
             console.log("Signup Error:", error);
         }
