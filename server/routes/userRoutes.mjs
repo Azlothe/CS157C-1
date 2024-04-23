@@ -4,41 +4,41 @@ import constants from "../database/constants.mjs";
 
 const router = express.Router();
 
-router.get('/checkUserExists', async (req, res) => {
-    const { email } = req.query;
+const getUser = async (email) => {
+  const query = `SELECT userID, username, email FROM ${constants.KEYSPACE}.Users WHERE email = ? ALLOW FILTERING;`;
+  return await client.execute(query, [email], { prepare: true });
+}
 
-    try {
-        const query = `SELECT userID, username, email FROM ${constants.KEYSPACE}.Users WHERE email='${email}' ALLOW FILTERING;`;
-        const result = await client.execute(query);
+router.get("/checkUserExists", async (req, res) => {
+  const { email } = req.query;
 
-        return res.status(200).json({ exists: result.rows.length != 0 });
-
-    } catch (error) {
-        console.error('Error executing query:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+  try {
+    const result = await getUser(email);
+    
+    return res.status(200).json({ exists: result.rows.length != 0 });
+  } catch (error) {
+    console.error("Error executing query:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 router.post("/signup", async (req, res) => {
-    const { username, email } = req.body;
-
-    try {
-      const result = await client.execute(
-        `SELECT username FROM ${constants.KEYSPACE}.Users WHERE username='${username}' AND email='${email}' ALLOW FILTERING;`
-      );
+  const { username, email } = req.body;
   
-      if (result.rows.length)
-        return res.status(400).json({ error: "User already exists." });
-  
-      await client.execute(`INSERT INTO Users (userID, username, email) VALUES
-        (uuid(), '${username}', '${email}');`);
+  try {
+    const result = await getUser(email);
 
-      res.json({ message: "User registered successfully" });
+    if (result.rows.length)
+      return res.status(400).json({ error: "User already exists." });
 
-    } catch (err) {
-      console.error("Error:", err);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  });
+    const query = `INSERT INTO ${constants.KEYSPACE}.Users (userID, username, email) VALUES (uuid(), ?, ?);`;
+    await client.execute(query, [username, email], { prepare: true });
+
+    res.json({ message: "User registered successfully" });
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 export default router;
