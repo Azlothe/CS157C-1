@@ -7,7 +7,7 @@ import { getEmail } from "../context/AuthContext.ts";
 
 const DEFAULT_TOOL: Tool = "Brush";
 const DEFAULT_COLOR: RGB = { r: 0, g: 0, b: 0 };
-const DEFAULT_SIZE = 1;
+const DEFAULT_SIZE = 8;
 
 function CanvasPage() {
     const [center, setCenter] = useState({ x: 0, y: 0 });
