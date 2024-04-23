@@ -83,7 +83,7 @@ let strokes : Strokes.Stroke[] = [];
 function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
   let isP5Init = false;
   const center = DEFAULT_CENTER;
-  let tool = DEFAULT_TOOL;
+  let tool : Tool = DEFAULT_TOOL;
   let color = DEFAULT_COLOR;
   let size = DEFAULT_SIZE;
 
@@ -104,10 +104,10 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     weight: number
   ) => {
     p5.strokeWeight(weight);
-    p5.stroke(...color);
+    p5.stroke(Object.values(color));
     p5.noFill();
     p5.beginShape();
-    coords.forEach((el) => p5.vertex(el.x, el.y));
+    coords?.forEach((el) => p5.curveVertex(el.x, el.y));
     p5.endShape();
   };
 
@@ -142,52 +142,39 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     p5.circle(0, 0, 100);
 
     p5.noFill();
-    switch (tool) {
-      case "Brush":
-        p5.stroke(color.r, color.g, color.b);
-        break;
 
-      case "Eraser":
-        p5.stroke(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
-        break;
-    }
-    p5.strokeWeight(size);
-    p5.beginShape();
-    currentStroke.coordinates.forEach((coord) =>
-      p5.curveVertex(coord.x, coord.y)
-    );
-    p5.endShape();
+    drawStroke(currentStroke.coordinates, currentStroke.color, currentStroke.weight);
+
   };
 
   const currentStroke: Strokes.Stroke = {
     username: "MikeWu",
     email: "mikewu@gmail.com",
     coordinates: [],
-    color: {
-      r: 0,
-      g: 0,
-      b: 0,
-    },
-    weight: 0,
+    color: DEFAULT_COLOR,
+    weight: DEFAULT_SIZE,
   };
 
   p5.mousePressed = () => {
     if (isP5Init && tool === "Brush") {
       currentStroke.weight = size;
       currentStroke.color = { r: color.r, g: color.g, b: color.b };
-
+      
       currentStroke.coordinates = [];
       currentStroke.coordinates.push({
         x: (p5.pmouseX - WIDTH / 2 - center.x) / scaleFactor,
         y: (p5.pmouseY - HEIGHT / 2 - center.y) / scaleFactor,
       });
+      
     }
+    
   };
-
+  
   p5.mouseReleased = () => {
     if (isDrawing) {
       isDrawing = false;
       console.log("Stroke Data: ", JSON.stringify(currentStroke));
+      strokes.push({ ...currentStroke });
       sendStrokeDataToServer(currentStroke);
     }
   };
@@ -201,21 +188,6 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
         center.x += p5.mouseX - p5.pmouseX; // dX
         center.y += p5.mouseY - p5.pmouseY; // dY
         return;
-
-      case "Brush":
-        // Tool = "Brush"
-        // p5.stroke(color.r, color.g, color.b);
-        // p5.strokeWeight(size);
-        break;
-
-      case "Eraser":
-        // Tool = "Eraser"
-        // p5.stroke(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
-        // p5.strokeWeight(size);
-        // color.r = BG_COLOR.r;
-        // color.g = BG_COLOR.g;
-        // color.b = BG_COLOR.b;
-        break;
 
       case "Color Picker":
         return;
