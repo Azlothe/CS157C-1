@@ -10,18 +10,8 @@ const createCoordinateType = async () => {
     console.log("created coordinate type");
 }
 
-const createRangeType = async () => {
-    const query = `CREATE TYPE IF NOT EXISTS ${constants.KEYSPACE}.Range(
-        min int,
-        max int
-    );`
-    await client.execute(query);
-    console.log("created range type");
-}
-
 const createStrokes = async () => {
     await createCoordinateType();
-    await createRangeType();
 
     const query = `CREATE TABLE IF NOT EXISTS ${constants.KEYSPACE}.Strokes (
         strokeID UUID, 
@@ -31,8 +21,10 @@ const createStrokes = async () => {
         color tuple<smallint, smallint, smallint>, 
         weight smallint, 
         time timestamp, 
-        xRange frozen<Range>,
-        yRange frozen<Range>,
+        minX int,
+        maxX int,
+        minY int,
+        maxY int,
         PRIMARY KEY(strokeID));`
     await client.execute(query);
     console.log("create stroke table");

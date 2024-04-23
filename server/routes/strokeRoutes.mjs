@@ -19,7 +19,7 @@ const findCoordinateRange = (coordinates) => {
     maxY = Math.max(maxY, coordinate.y);
   });
 
-  return [ { min: minX, max: maxX }, { min: minY, max: maxY } ];
+  return { minX, maxX, minY, maxY };
 };
 
 router.get("/", async (req, res) => {
@@ -36,7 +36,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   const { username, email, coordinates, color, weight } = req.body;
 
-  const [xRange, yRange] = findCoordinateRange(coordinates);
+  const bounds = findCoordinateRange(coordinates);
 
   // Generating a current timestamp for the stroke
   const time = new Date().toISOString();
@@ -46,10 +46,10 @@ router.post("/", async (req, res) => {
     //const colorTuple = [color.r, color.g, color.b];
     const colorTuple = new types.Tuple(color.r, color.g, color.b);
 
-    const insertQuery = `INSERT INTO ${constants.KEYSPACE}.Strokes (strokeID, username, email, coordinates, color, weight, time, xRange, yRange) VALUES (uuid(), ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const insertQuery = `INSERT INTO ${constants.KEYSPACE}.Strokes (strokeID, username, email, coordinates, color, weight, time, minX, maxX, minY, maxY) VALUES (uuid(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     await client.execute(
       insertQuery,
-      [username, email, coordinates, colorTuple, weight, time, xRange, yRange],
+      [username, email, coordinates, colorTuple, weight, time, bounds.minX, bounds.maxX, bounds.minY, bounds.maxY],
       { prepare: true }
     );
     res.status(201).send("Stroke saved successfully");
