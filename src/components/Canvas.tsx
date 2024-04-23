@@ -72,8 +72,27 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
   let isDrawing = false;
 
+  const calculateCoord = (mouseX : number, mouseY : number) => {
+    return {
+      x: (mouseX - WIDTH / 2 - center.x) / scaleFactor,
+      y: (mouseY - HEIGHT / 2 - center.y) / scaleFactor,
+    };
+  };
+
+  const calculateBound = () => {
+    const leftAnchor = (-WIDTH/2 - center.x);
+    const topAnchor = (-HEIGHT / 2 - center.y);
+    return {
+      left: leftAnchor / scaleFactor,
+      top: topAnchor / scaleFactor,
+      right: (leftAnchor + WIDTH) / scaleFactor,
+      bottom: (topAnchor + HEIGHT) / scaleFactor,
+    };
+  };
+
   const initCoords = async () => {
-    loadStrokes().then((data) => {
+    const { left, top, right, bottom } = calculateBound();
+    loadStrokes(left, top, right, bottom).then((data) => {
       strokes = data;
     });
   };
@@ -83,7 +102,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     color: RGB,
     weight: number
   ) => {
-    p5.strokeWeight(weight);
+    p5.strokeWeight(weight * scaleFactor);
     p5.stroke(Object.values(color));
     p5.noFill();
     p5.beginShape();
@@ -116,7 +135,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
     // draw elements in sorted order
     strokes.forEach((el: Strokes.Stroke) =>
-      drawStroke(el.coordinates, el.color, el.weight * scaleFactor)
+      drawStroke(el.coordinates, el.color, el.weight)
     );
 
     // circle for testing panning
@@ -128,7 +147,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     drawStroke(
       currentStroke.coordinates,
       currentStroke.color,
-      currentStroke.weight * scaleFactor
+      currentStroke.weight
     );
   };
 
@@ -160,10 +179,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     currentStroke.weight = size;
 
     currentStroke.coordinates = [];
-    currentStroke.coordinates.push({
-      x: (p5.pmouseX - WIDTH / 2 - center.x) / scaleFactor,
-      y: (p5.pmouseY - HEIGHT / 2 - center.y) / scaleFactor,
-    });
+    currentStroke.coordinates.push(calculateCoord(p5.pmouseX, p5.pmouseY));
   };
 
   p5.mouseReleased = () => {
@@ -188,10 +204,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
       case "Brush":
       case "Eraser":
         isDrawing = true;
-        currentStroke.coordinates.push({
-          x: (p5.mouseX - WIDTH / 2 - center.x) / scaleFactor,
-          y: (p5.mouseY - HEIGHT / 2 - center.y) / scaleFactor,
-        });
+        currentStroke.coordinates.push(calculateCoord(p5.mouseX, p5.mouseY));
         return;
 
       case "Color Picker":
@@ -207,9 +220,8 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
   p5.mouseMoved = () => {
     if (!isP5Init || tool !== "Pan" || strokes.length <= 0) return;
 
-    const mouseXOffset = p5.mouseX - WIDTH / 2 - center.x;
-    const mouseYOffset = p5.mouseY - HEIGHT / 2 - center.y;
-
+    const { x: mouseXOffset, y: mouseYOffset } = calculateCoord(p5.mouseX, p5.mouseY);
+    
     // Check if the mouse is hovering over any stroke
     for (const stroke of strokes) {
       for (let i = 0; i < stroke.coordinates.length - 1; i++) {

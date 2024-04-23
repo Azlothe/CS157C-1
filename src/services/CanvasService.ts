@@ -1,6 +1,7 @@
 import { Strokes } from "@/data/models/Strokes";
 
 export const loadStrokes = async (left : number, top : number, right : number, bottom : number) => {
+  console.log(`${import.meta.env.VITE_SERVER}/strokes?left=${left}&top=${top}&right=${right}&bottom=${bottom}`);
   return fetch(`${import.meta.env.VITE_SERVER}/strokes?left=${left}&top=${top}&right=${right}&bottom=${bottom}`)
     .then((response) => response.json())
     .catch((error) => console.error("Error fetching data:", error));
