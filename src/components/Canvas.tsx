@@ -17,7 +17,7 @@ const BG_COLOR: RGB = {
 const DEFAULT_CENTER = { x: 0, y: 0 };
 const DEFAULT_TOOL = "Brush";
 const DEFAULT_COLOR = { r: 0, g: 0, b: 0 };
-const DEFAULT_SIZE = 1;
+const DEFAULT_SIZE = 8;
 
 interface Props {
   tool: Tool;
@@ -118,7 +118,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
   p5.setup = () => {
     p5.createCanvas(WIDTH, HEIGHT, p5.WEBGL);
     p5.background(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
-    p5.frameRate(120);
+    p5.frameRate(60);
     isP5Init = true;
   };
 
@@ -191,15 +191,17 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
         center.y += p5.mouseY - p5.pmouseY; // dY
         return;
 
+      case "Brush":
+        isDrawing = true;
+        currentStroke.coordinates.push({
+          x: (p5.mouseX - WIDTH / 2 - center.x) / scaleFactor,
+          y: (p5.mouseY - HEIGHT / 2 - center.y) / scaleFactor,
+        });
+        return;
+
       case "Color Picker":
         return;
     }
-
-    isDrawing = true;
-    currentStroke.coordinates.push({
-      x: (p5.mouseX - WIDTH / 2 - center.x) / scaleFactor,
-      y: (p5.mouseY - HEIGHT / 2 - center.y) / scaleFactor,
-    });
   };
 
   p5.mouseWheel = (event: WheelEvent) => {
