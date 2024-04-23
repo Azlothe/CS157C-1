@@ -78,12 +78,12 @@ interface CustomSketchProps extends SketchProps {
   size: number;
 }
 
-let strokes : Strokes.Stroke[] = [];
+let strokes: Strokes.Stroke[] = [];
 
 function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
   let isP5Init = false;
   const center = DEFAULT_CENTER;
-  let tool : Tool = DEFAULT_TOOL;
+  let tool: Tool = DEFAULT_TOOL;
   let color = DEFAULT_COLOR;
   let size = DEFAULT_SIZE;
 
@@ -94,7 +94,6 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
   const initCoords = async () => {
     loadStrokes().then((data) => {
       strokes = data;
-      // data.forEach((el) => drawCoords(el.coordinates, el.color, el.weight));
     });
   };
 
@@ -135,7 +134,9 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     p5.translate(center.x, center.y);
 
     // draw elements in sorted order
-    strokes.forEach((el : Strokes.Stroke) => drawStroke(el.coordinates, el.color, el.weight));
+    strokes.forEach((el: Strokes.Stroke) =>
+      drawStroke(el.coordinates, el.color, el.weight)
+    );
 
     // circle for testing panning
     p5.fill(0, 51, 160);
@@ -143,8 +144,11 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
     p5.noFill();
 
-    drawStroke(currentStroke.coordinates, currentStroke.color, currentStroke.weight);
-
+    drawStroke(
+      currentStroke.coordinates,
+      currentStroke.color,
+      currentStroke.weight
+    );
   };
 
   const currentStroke: Strokes.Stroke = {
@@ -159,17 +163,15 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     if (isP5Init && tool === "Brush") {
       currentStroke.weight = size;
       currentStroke.color = { r: color.r, g: color.g, b: color.b };
-      
+
       currentStroke.coordinates = [];
       currentStroke.coordinates.push({
         x: (p5.pmouseX - WIDTH / 2 - center.x) / scaleFactor,
         y: (p5.pmouseY - HEIGHT / 2 - center.y) / scaleFactor,
       });
-      
     }
-    
   };
-  
+
   p5.mouseReleased = () => {
     if (isDrawing) {
       isDrawing = false;
