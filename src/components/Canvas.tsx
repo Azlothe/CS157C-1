@@ -4,7 +4,7 @@ import {
   SketchProps,
 } from "@p5-wrapper/react";
 import { Tool, RGB } from "../types/shared.tsx";
-import { loadStrokes } from "../services/CanvasService.ts";
+import { loadStrokes, sendStrokeDataToServer } from "../services/CanvasService.ts";
 import { Strokes } from "@/data/models/Strokes.js";
 
 const WIDTH = window.innerWidth;
@@ -26,25 +26,6 @@ interface Props {
   center: { x: number; y: number };
   updateCenter: (center: { x: number; y: number }) => void;
 }
-
-const sendStrokeDataToServer = async (strokeData: Strokes.Stroke) => {
-  try {
-    // Notice the full URL including the port number (3000) is specified here
-    const response = await fetch(`${import.meta.env.VITE_SERVER}/strokes`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(strokeData),
-    });
-    if (!response.ok) {
-      throw new Error(`Server responded with status: ${response.status}`);
-    }
-    console.log("Stroke data sent successfully to the server.");
-  } catch (error) {
-    console.error("Failed to send stroke data:", error);
-  }
-};
 
 function Canvas({ tool, color, size, center, updateCenter }: Props) {
   return (

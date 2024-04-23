@@ -23,9 +23,14 @@ const findCoordinateRange = (coordinates) => {
 };
 
 router.get("/", async (req, res) => {
+  const { left, top, right, bottom } = req.query;
+  
   try {
-    const query = `SELECT username, email, coordinates, color, weight FROM ${constants.KEYSPACE}.Strokes`;
-    const result = await client.execute(query);
+    const query = `SELECT username, email, coordinates, color, weight FROM ${constants.KEYSPACE}.Strokes WHERE minX <= ? AND maxX >= ? AND minY <= ? AND maxY >= ? ALLOW FILTERING;`;
+    const result = await client.execute(query,
+      [right, left, top, bottom],
+      { prepare: true }
+    );
     res.json(result.rows);
   } catch (error) {
     console.error("Error executing Cassandra query:", error);
