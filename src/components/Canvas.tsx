@@ -135,7 +135,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
     // draw elements in sorted order
     strokes.forEach((el: Strokes.Stroke) =>
-      drawStroke(el.coordinates, el.color, el.weight)
+      drawStroke(el.coordinates, el.color, el.weight * scaleFactor)
     );
 
     // circle for testing panning
@@ -147,7 +147,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     drawStroke(
       currentStroke.coordinates,
       currentStroke.color,
-      currentStroke.weight
+      currentStroke.weight * scaleFactor
     );
   };
 
