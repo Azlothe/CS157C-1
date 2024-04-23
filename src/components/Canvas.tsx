@@ -78,7 +78,7 @@ interface CustomSketchProps extends SketchProps {
   size: number;
 }
 
-let strokes = [];
+let strokes : Strokes.Stroke[] = [];
 
 function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
   let isP5Init = false;
@@ -98,9 +98,9 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     });
   };
 
-  const drawCoords = (
-    coords: { x: number; y: number }[],
-    color: number[],
+  const drawStroke = (
+    coords: Strokes.Coordinate[],
+    color: RGB,
     weight: number
   ) => {
     p5.strokeWeight(weight);
@@ -135,7 +135,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     p5.translate(center.x, center.y);
 
     // draw elements in sorted order
-    // strokes.forEach((el) => drawCoords(el.coordinates, el.color, el.weight));
+    strokes.forEach((el : Strokes.Stroke) => drawStroke(el.coordinates, el.color, el.weight));
 
     // circle for testing panning
     p5.fill(0, 51, 160);
