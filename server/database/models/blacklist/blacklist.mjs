@@ -5,7 +5,7 @@ const createBlacklist = async () => {
 
     const query = `CREATE TABLE IF NOT EXISTS ${constants.KEYSPACE}.Blacklist (
         userID UUID,
-        blacklisted_userID UUID
+        blacklisted_userID UUID,
         PRIMARY KEY(userID, blacklisted_userID)
     );`
     await client.execute(query);

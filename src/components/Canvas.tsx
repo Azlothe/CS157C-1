@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   P5CanvasInstance,
   ReactP5Wrapper,
@@ -6,9 +5,7 @@ import {
 } from "@p5-wrapper/react";
 import { Tool, RGB } from "../types/shared.tsx";
 import { loadStrokes } from "../services/CanvasService.ts";
-import { useEffect } from "react";
-import { Vector } from "p5";
-
+import { Strokes } from "@/data/models/Strokes.js";
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
@@ -30,83 +27,29 @@ interface Props {
   updateCenter: (center: { x: number; y: number }) => void;
 }
 
+const sendStrokeDataToServer = async (strokeData: Strokes.Stroke) => {
+  try {
+    // Notice the full URL including the port number (3000) is specified here
+    const response = await fetch(`${import.meta.env.VITE_SERVER}/strokes`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(strokeData),
+    });
+    if (!response.ok) {
+      throw new Error(`Server responded with status: ${response.status}`);
+    }
+    console.log("Stroke data sent successfully to the server.");
+  } catch (error) {
+    console.error("Failed to send stroke data:", error);
+  }
+};
+
 function Canvas({ tool, color, size, center, updateCenter }: Props) {
-  const [isMouseDown, setIsMouseDown] = useState(false);
-  const [isMouseMove, setIsMouseMove] = useState(false);
-  const [strokePath, setStrokePath] = useState<{ x: number; y: number }[]>([]);
-
-
-  const sendStrokeDataToServer = async (strokeData) => {
-    try {
-      // Notice the full URL including the port number (3000) is specified here
-      const response = await fetch(`${import.meta.env.VITE_SERVER}/strokes`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(strokeData),
-      });
-      if (!response.ok) {
-        throw new Error(`Server responded with status: ${response.status}`);
-      }
-      console.log("Stroke data sent successfully to the server.");
-    } catch (error) {
-      console.error('Failed to send stroke data:', error);
-    }
-  };
-  
-
-  const handleMouseDown = () => {
-    setIsMouseDown(true);
-    setStrokePath([]); // Reset the path at the start of a new stroke
-  };
-
-  const handleMouseUp = () => {
-    setIsMouseDown(false);
-  
-    // Convert the color object to an array (tuple)
-    const colorTuple = [color.r, color.g, color.b];
-  
-    // Preparing the stroke data according to the backend schema
-    const strokeData = {
-      username: "MikeWu", // Same as above, example usage
-      email: "mikewu@gmail.com",
-      coordinates: strokePath, // Directly using the strokePath as coordinates
-      color: colorTuple,
-      weight: size, // Using the size state as weight
-    };
-  
-    // Logging the stroke data to the console
-    console.log("Stroke Data:", JSON.stringify(strokeData));
-
-    // Send the stroke data to the server
-    sendStrokeDataToServer(strokeData);
-  };
-
-  const handleMouseMove = (e) => {
-    if (isMouseDown) {
-      setIsMouseMove(!isMouseMove);
-      
-      // Convert mouse coordinates to relative canvas coordinates
-      const rect = e.target.getBoundingClientRect();
-      const x = e.clientX - rect.left - center.x;
-      const y = e.clientY - rect.top - center.y;
-      setStrokePath((prevPath) => [...prevPath, { x, y }]);
-    }
-  };
-
-  // checking to see when the stroke path is updated
-  useEffect(() => {
-  console.log("Stroke Path Updated:", strokePath);
-  }, [strokePath]);
-
   return (
     <>
-      <div
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        onMouseMove={handleMouseMove}
-      >
+      <div>
         {/* <p>
                     Center: ({center.x}, {center.y}) 
                 </p>
@@ -117,7 +60,6 @@ function Canvas({ tool, color, size, center, updateCenter }: Props) {
           sketch={sketch}
           pcenter={center}
           updateCenter={updateCenter}
-          isMouseMove={isMouseMove}
           tool={tool}
           color={color}
           size={size}
@@ -146,6 +88,8 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
   let size = DEFAULT_SIZE;
 
   let scaleFactor = 1;
+
+  let isDrawing = false;
 
   const initCoords = async () => {
     loadStrokes().then((data) => {
@@ -189,7 +133,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
     // panning
     p5.translate(center.x, center.y);
-    
+
     // draw elements in sorted order
     // strokes.forEach((el) => drawCoords(el.coordinates, el.color, el.weight));
 
@@ -209,30 +153,47 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     }
     p5.strokeWeight(size);
     p5.beginShape();
-    currentPos.forEach(coord => p5.curveVertex(coord.x, coord.y));
+    currentStroke.coordinates.forEach((coord) =>
+      p5.curveVertex(coord.x, coord.y)
+    );
     p5.endShape();
   };
 
-  let currentPos : Vector[] = [];
+  const currentStroke: Strokes.Stroke = {
+    username: "MikeWu",
+    email: "mikewu@gmail.com",
+    coordinates: [],
+    color: {
+      r: 0,
+      g: 0,
+      b: 0,
+    },
+    weight: 0,
+  };
 
   p5.mousePressed = () => {
     if (isP5Init && tool === "Brush") {
-      currentPos = [];
-      currentPos.push(p5.createVector( (p5.pmouseX - WIDTH / 2 - center.x)/scaleFactor, (p5.pmouseY - HEIGHT / 2 - center.y)/scaleFactor ));
+      currentStroke.weight = size;
+      currentStroke.color = { r: color.r, g: color.g, b: color.b };
+
+      currentStroke.coordinates = [];
+      currentStroke.coordinates.push({
+        x: (p5.pmouseX - WIDTH / 2 - center.x) / scaleFactor,
+        y: (p5.pmouseY - HEIGHT / 2 - center.y) / scaleFactor,
+      });
     }
-  }
+  };
+
+  p5.mouseReleased = () => {
+    if (isDrawing) {
+      isDrawing = false;
+      console.log("Stroke Data: ", JSON.stringify(currentStroke));
+      sendStrokeDataToServer(currentStroke);
+    }
+  };
 
   p5.mouseDragged = () => {
     if (!isP5Init) return;
-
-    // Variables to store stroke data
-    let strokeData = {
-      tool: tool,
-      color: {r: color.r, g: color.g, b: color.b},
-      size: size,
-      start: {x: p5.pmouseX - WIDTH / 2 - center.x, y: p5.pmouseY - HEIGHT / 2 - center.y},
-      end: {x: (p5.mouseX - WIDTH / 2 - center.x)/scaleFactor, y: (p5.mouseY - HEIGHT / 2 - center.y)/scaleFactor}
-    };
 
     switch (tool) {
       case "Pan":
@@ -259,17 +220,18 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
       case "Color Picker":
         return;
     }
-    // p5.line(strokeData.start.x, strokeData.start.y, strokeData.end.x, strokeData.end.y);
-    currentPos.push(p5.createVector(strokeData.end.x, strokeData.end.y));
 
-    // Log stroke data to the console
-    console.log("Stroke Data:", JSON.stringify(strokeData));
+    isDrawing = true;
+    currentStroke.coordinates.push({
+      x: (p5.mouseX - WIDTH / 2 - center.x) / scaleFactor,
+      y: (p5.mouseY - HEIGHT / 2 - center.y) / scaleFactor,
+    });
   };
 
-  p5.mouseWheel = (event : WheelEvent) => {
+  p5.mouseWheel = (event: WheelEvent) => {
     p5.background(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
     scaleFactor *= event.deltaY < 0 ? 1.05 : 0.95;
-  }
+  };
 
   p5.mouseMoved = () => {
     if (!isP5Init || tool !== "Pan" || strokes.length <= 0) return;
@@ -282,9 +244,10 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
       for (let i = 0; i < stroke.coordinates.length - 1; i++) {
         const p = stroke.coordinates[i];
         const dist = p5.dist(p.x, p.y, mouseXOffset, mouseYOffset);
-        if (dist <= stroke.weight) { // use strokeWeight as distance threshold
-            console.log(stroke.username);
-            return;
+        if (dist <= stroke.weight) {
+          // use strokeWeight as distance threshold
+          console.log(stroke.username);
+          return;
         }
       }
     }
