@@ -5,6 +5,9 @@ import { Tooltip } from "@mui/material";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 
+const MIN = 1;
+const MAX = 100;
+
 const theme = createTheme({
     palette: {
         primary: {
@@ -58,8 +61,8 @@ function VerticalAccessibleSlider({ updateSize, size }: Props) {
                         defaultValue={size}
                         aria-label="Temperature"
                         valueLabelDisplay="auto"
-                        min={1}
-                        max={20}
+                        min={MIN}
+                        max={MAX}
                         color="primary"
                         onKeyDown={preventHorizontalKeyboardNavigation}
                         onChange={handleSize}
