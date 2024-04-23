@@ -79,6 +79,12 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     };
   };
 
+  /**
+   * NOTE:
+   * Up on the y-axis is negative, whereas down is positive. This is in sync with how canvas coordinates are calculated.
+   *  Left -> Right: Negative -> Positive
+   *  Top -> Bottom: Negative -> Positive
+   */
   const calculateBound = () => {
     const leftAnchor = (-WIDTH/2 - center.x);
     const topAnchor = (-HEIGHT / 2 - center.y);

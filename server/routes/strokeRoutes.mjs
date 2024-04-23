@@ -23,10 +23,16 @@ const findCoordinateRange = (coordinates) => {
 };
 
 router.get("/", async (req, res) => {
-  const { left, top, right, bottom } = req.query;
+  let { left, top, right, bottom } = req.query;
+
+  left = Math.floor(left);
+  top = Math.floor(top);
+
+  right = Math.ceil(right);
+  bottom = Math.ceil(bottom);
   
   try {
-    const query = `SELECT username, email, coordinates, color, weight FROM ${constants.KEYSPACE}.Strokes WHERE minX <= ? AND maxX >= ? AND minY <= ? AND maxY >= ? ALLOW FILTERING;`;
+    const query = `SELECT username, email, coordinates, color, weight FROM ${constants.KEYSPACE}.Strokes WHERE minX <= ? AND maxX >= ? AND minY >= ? AND maxY <= ? ALLOW FILTERING;`;
     const result = await client.execute(query,
       [right, left, top, bottom],
       { prepare: true }
