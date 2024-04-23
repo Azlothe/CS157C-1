@@ -23,10 +23,14 @@ function SignupPage() {
             // TODO: check if user already exists in database
             // if so, navigate to /canvas page
             // else store email and username into database
-            if (email && username && !await userExists(email)) 
+            if (email && username) {
+                if (await userExists(email)) 
+                    throw "Email already associated with an account.";
+                
                 await signUp(username, email);
+                navigate("/canvas");
+            }
             
-            navigate("/canvas");
         } catch (error) {
             console.log("Signup Error:", error);
         }
