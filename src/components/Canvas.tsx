@@ -160,16 +160,29 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
   };
 
   p5.mousePressed = () => {
-    if (isP5Init && tool === "Brush") {
-      currentStroke.weight = size;
-      currentStroke.color = { r: color.r, g: color.g, b: color.b };
+    if (!isP5Init) return;
 
-      currentStroke.coordinates = [];
-      currentStroke.coordinates.push({
-        x: (p5.pmouseX - WIDTH / 2 - center.x) / scaleFactor,
-        y: (p5.pmouseY - HEIGHT / 2 - center.y) / scaleFactor,
-      });
+    switch (tool) {
+      case "Pan":
+      case "Color Picker":
+        return;
+      
+      case "Brush":
+        currentStroke.color = color;
+        break;
+        
+      case "Eraser":
+        currentStroke.color = BG_COLOR;
+        break;
     }
+    
+    currentStroke.weight = size;
+
+    currentStroke.coordinates = [];
+    currentStroke.coordinates.push({
+      x: (p5.pmouseX - WIDTH / 2 - center.x) / scaleFactor,
+      y: (p5.pmouseY - HEIGHT / 2 - center.y) / scaleFactor,
+    });
   };
 
   p5.mouseReleased = () => {
@@ -192,6 +205,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
         return;
 
       case "Brush":
+      case "Eraser":
         isDrawing = true;
         currentStroke.coordinates.push({
           x: (p5.mouseX - WIDTH / 2 - center.x) / scaleFactor,
