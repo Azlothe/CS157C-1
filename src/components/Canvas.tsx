@@ -9,6 +9,7 @@ import { loadStrokes, sendStrokeDataToServer } from "../services/CanvasService.t
 import { Strokes } from "@/data/models/Strokes.js";
 import { getEmail } from "../context/AuthContext.ts";
 import { getUser } from "@/services/AuthService";
+import Tooltip from "@mui/material/Tooltip";
 
 const BG_COLOR: RGB = {
   r: 255,
@@ -67,21 +68,27 @@ function Canvas({ tool, color, size, center, updateCenter }: Props) {
 
   return (
     <>
-      <div
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        onMouseMove={handleMouseMove}
+      <Tooltip
+        title="Username"
+        placement="top-start"
+        followCursor
       >
-        <ReactP5Wrapper
-          sketch={sketch}
-          pcenter={center}
-          updateCenter={updateCenter}
-          isMouseMove={isMouseMove}
-          tool={tool}
-          color={color}
-          size={size}
-        />
-      </div>
+        <div
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onMouseMove={handleMouseMove}
+        >
+          <ReactP5Wrapper
+            sketch={sketch}
+            pcenter={center}
+            updateCenter={updateCenter}
+            isMouseMove={isMouseMove}
+            tool={tool}
+            color={color}
+            size={size}
+          />
+        </div>
+      </Tooltip>
     </>
   );
 }
