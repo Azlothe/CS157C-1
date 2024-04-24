@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   P5CanvasInstance,
   ReactP5Wrapper,
@@ -28,13 +29,36 @@ interface Props {
 }
 
 function Canvas({ tool, color, size, center, updateCenter }: Props) {
+  // these states are used for p5.updateWithProps so the center coordinate display updates
+  const [isMouseDown, setIsMouseDown] = useState(false);
+  const [isMouseMove, setIsMouseMove] = useState(false);
+
+  const handleMouseDown = () => {
+    setIsMouseDown(true);
+  };
+
+  const handleMouseUp = () => {
+    setIsMouseDown(false);
+  };
+
+  const handleMouseMove = () => {
+    if (isMouseDown) {
+      setIsMouseMove(!isMouseMove);
+    }
+  };
+
   return (
     <>
-      <div>
+      <div
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
+      >
         <ReactP5Wrapper
           sketch={sketch}
           pcenter={center}
           updateCenter={updateCenter}
+          isMouseMove={isMouseMove}
           tool={tool}
           color={color}
           size={size}
@@ -199,20 +223,22 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
   p5.mouseDragged = () => {
     if (!isP5Init) return;
 
-    switch (tool) {
-      case "Pan":
-        center.x += p5.mouseX - p5.pmouseX; // dX
-        center.y += p5.mouseY - p5.pmouseY; // dY
-        return;
+    if (p5.mouseButton === p5.LEFT) {
+      switch (tool) {
+        case "Pan":
+          center.x += p5.mouseX - p5.pmouseX; // dX
+          center.y += p5.mouseY - p5.pmouseY; // dY
+          return;
 
-      case "Brush":
-      case "Eraser":
-        isDrawing = true;
-        currentStroke.coordinates.push(calculateCoord(p5.mouseX, p5.mouseY));
-        return;
+        case "Brush":
+        case "Eraser":
+          isDrawing = true;
+          currentStroke.coordinates.push(calculateCoord(p5.mouseX, p5.mouseY));
+          return;
 
-      case "Color Picker":
-        return;
+        case "Color Picker":
+          return;
+      }
     }
   };
 
@@ -246,7 +272,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     const newY = center.y === 0 ? 0 : -center.y;
 
     if (tool === "Pan" && props.isMouseMove) {
-      console.log("update center to {" + newX + ", " + newY + "}");
+      // console.log("update center to {" + newX + ", " + newY + "}");
       if (newX !== props.pcenter.x && newY !== props.pcenter.y) {
         props.updateCenter({ x: newX, y: newY });
       }
