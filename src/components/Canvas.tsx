@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   P5CanvasInstance,
   ReactP5Wrapper,
@@ -7,6 +7,8 @@ import {
 import { Tool, RGB } from "../types/shared.tsx";
 import { loadStrokes, sendStrokeDataToServer } from "../services/CanvasService.ts";
 import { Strokes } from "@/data/models/Strokes.js";
+import { getEmail } from "../context/AuthContext.ts";
+import { getUser } from "@/services/AuthService";
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
@@ -19,6 +21,9 @@ const DEFAULT_CENTER = { x: 0, y: 0 };
 const DEFAULT_TOOL = "Brush";
 const DEFAULT_COLOR = { r: 0, g: 0, b: 0 };
 const DEFAULT_SIZE = 8;
+
+let currentUsername: string;
+let currentUserEmail: string;
 
 interface Props {
   tool: Tool;
@@ -46,6 +51,21 @@ function Canvas({ tool, color, size, center, updateCenter }: Props) {
       setIsMouseMove(!isMouseMove);
     }
   };
+
+  useEffect(() => {
+    const getEmailAsync = async () => {
+      try {
+        const email = await getEmail();
+        const username = await getUser(email);
+        currentUsername = username;
+        currentUserEmail = email;
+      } catch (error) {
+        console.error('Error fetching email:', error);
+      }
+    };
+
+    getEmailAsync();
+  }, []);
 
   return (
     <>
@@ -181,8 +201,8 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
   };
 
   const currentStroke: Strokes.Stroke = {
-    username: "MikeWu",
-    email: "mikewu@gmail.com",
+    username: currentUsername,
+    email: currentUserEmail,
     coordinates: [],
     color: DEFAULT_COLOR,
     weight: DEFAULT_SIZE,
@@ -259,7 +279,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
         const dist = p5.dist(p.x, p.y, mouseXOffset, mouseYOffset);
         if (dist <= stroke.weight) {
           // use strokeWeight as distance threshold
-          console.log(stroke.username);
+          console.log(stroke.username + ", " + stroke.email);
           return;
         }
       }
