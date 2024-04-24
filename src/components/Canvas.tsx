@@ -31,12 +31,6 @@ function Canvas({ tool, color, size, center, updateCenter }: Props) {
   return (
     <>
       <div>
-        {/* <p>
-                    Center: ({center.x}, {center.y}) 
-                </p>
-                <p>
-                    Bottom Right: ({bottomRight.x}, {bottomRight.y})
-                </p> */}
         <ReactP5Wrapper
           sketch={sketch}
           pcenter={center}
@@ -128,6 +122,10 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     isP5Init = true;
   };
 
+  p5.windowResized = () => {
+    p5.resizeCanvas(WIDTH, HEIGHT);
+  }
+
   // loops continuously
   p5.draw = () => {
     if (tool === "Pan") {
@@ -145,6 +143,7 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     );
 
     // circle for testing panning
+    p5.noStroke();
     p5.fill(0, 51, 160);
     p5.circle(0, 0, 100);
 
@@ -202,7 +201,6 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
     switch (tool) {
       case "Pan":
-        // Tool = "Pan"
         center.x += p5.mouseX - p5.pmouseX; // dX
         center.y += p5.mouseY - p5.pmouseY; // dY
         return;
