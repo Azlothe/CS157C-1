@@ -1,3 +1,20 @@
+export async function getUser(email: string) {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_SERVER}/users/getUser?email=${email}`);
+  
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+  
+      const data = await response.json();
+  
+      return data;
+    } catch (error) {
+      console.error('There was a problem fetching user data:', error);
+      throw error;
+    }
+  }
+
 export async function userExists(email : string) {
     const response = await fetch(`${import.meta.env.VITE_SERVER}/users/checkUserExists?email=${email}`);
     const data = await response.json();

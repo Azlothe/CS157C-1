@@ -9,6 +9,26 @@ const getUser = async (email) => {
   return await client.execute(query, [email], { prepare: true });
 }
 
+router.get("/getUser", async (req, res) => {
+  const { email } = req.query;
+
+  try {
+    const result = await getUser(email);
+
+    const userData = result.rows[0];
+
+    if (userData) {
+      const { userID, username, email } = userData;
+      res.status(200).json({ userID, username, email });
+    } else {
+      res.status(404).json({ error: "User not found" });
+    }
+  } catch (error) {
+    console.error("Error executing query:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.get("/checkUserExists", async (req, res) => {
   const { email } = req.query;
 
