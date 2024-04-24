@@ -10,8 +10,6 @@ import { Strokes } from "@/data/models/Strokes.js";
 import { getEmail } from "../context/AuthContext.ts";
 import { getUser } from "@/services/AuthService";
 
-const WIDTH = window.innerWidth;
-const HEIGHT = window.innerHeight;
 const BG_COLOR: RGB = {
   r: 255,
   g: 255,
@@ -112,8 +110,8 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
   const calculateCoord = (mouseX : number, mouseY : number) => {
     return {
-      x: (mouseX - WIDTH / 2 - center.x) / scaleFactor,
-      y: (mouseY - HEIGHT / 2 - center.y) / scaleFactor,
+      x: (mouseX - window.innerWidth / 2 - center.x) / scaleFactor,
+      y: (mouseY - window.innerHeight / 2 - center.y) / scaleFactor,
     };
   };
 
@@ -124,13 +122,13 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
    *  Top -> Bottom: Negative -> Positive
    */
   const calculateBound = () => {
-    const leftAnchor = (-WIDTH/2 - center.x);
-    const topAnchor = (-HEIGHT / 2 - center.y);
+    const leftAnchor = (-window.innerWidth/2 - center.x);
+    const topAnchor = (-window.innerHeight / 2 - center.y);
     return {
       left: leftAnchor / scaleFactor,
       top: topAnchor / scaleFactor,
-      right: (leftAnchor + WIDTH) / scaleFactor,
-      bottom: (topAnchor + HEIGHT) / scaleFactor,
+      right: (leftAnchor + window.innerWidth) / scaleFactor,
+      bottom: (topAnchor + window.innerHeight) / scaleFactor,
     };
   };
 
@@ -160,14 +158,15 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
 
   // only runs once on mount
   p5.setup = () => {
-    p5.createCanvas(WIDTH, HEIGHT, p5.WEBGL);
+    p5.createCanvas(window.innerWidth, window.innerHeight, p5.WEBGL);
     p5.background(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
     p5.frameRate(60);
     isP5Init = true;
   };
 
   p5.windowResized = () => {
-    p5.resizeCanvas(WIDTH, HEIGHT);
+    p5.resizeCanvas(window.innerWidth, window.innerHeight);
+    p5.background(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b);
   }
 
   // loops continuously
