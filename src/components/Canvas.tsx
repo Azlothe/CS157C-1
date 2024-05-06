@@ -23,6 +23,7 @@ const DEFAULT_SIZE = 8;
 
 let currentUsername: string;
 let currentUserEmail: string;
+let hoveredUsername: string | undefined;
 
 interface Props {
   tool: Tool;
@@ -55,8 +56,8 @@ function Canvas({ tool, color, size, center, updateCenter }: Props) {
     const getEmailAsync = async () => {
       try {
         const email = await getEmail();
-        const username = await getUser(email);
-        currentUsername = username;
+        const user = await getUser(email);
+        currentUsername = user.username;
         currentUserEmail = email;
       } catch (error) {
         console.error('Error fetching email:', error);
@@ -69,7 +70,7 @@ function Canvas({ tool, color, size, center, updateCenter }: Props) {
   return (
     <>
       <Tooltip
-        title="Username"
+        title={hoveredUsername}
         placement="top-start"
         followCursor
       >
@@ -230,6 +231,9 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
         currentStroke.color = BG_COLOR;
         break;
     }
+
+    currentStroke.username = currentUsername;
+    currentStroke.email = currentUserEmail;
     
     currentStroke.weight = size;
 
@@ -286,7 +290,10 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
         if (dist <= stroke.weight) {
           // use strokeWeight as distance threshold
           console.log(stroke.username + ", " + stroke.email);
+          hoveredUsername = stroke.username;
           return;
+        } else {
+          hoveredUsername = undefined;
         }
       }
     }
