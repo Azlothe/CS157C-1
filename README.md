@@ -1,3 +1,9 @@
+# Running this applicaiotn 
+1. Run 'cassandra' in console
+2. Run app through npm run dev or npm run in main directory 
+
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
