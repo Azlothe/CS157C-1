@@ -145,6 +145,14 @@ function sketch(p5: P5CanvasInstance<CustomSketchProps>) {
     loadStrokes(left, top, right, bottom).then((data) => {
       strokes = data;
     });
+
+      // Update strokes every 1 second
+    setInterval(() => {
+      loadStrokes(left, top, right, bottom).then((data) => {
+        strokes = data;
+      });
+    }, 100);
+    
   };
 
   const drawStroke = (
